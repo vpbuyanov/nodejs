@@ -1,4 +1,4 @@
-import router from './routers/api.js';
+import router from './api/api.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";

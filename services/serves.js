@@ -1,8 +1,4 @@
-let users = {
-    'name': 0,
-}
-
-let comments = ['are', 'is', 'user']
+import {users, comments} from '../common/public.js'
 
 export const getAllStats = (req, res) => {
     const name = req.headers['user-agent']
