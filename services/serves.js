@@ -1,5 +1,9 @@
 import {users, comments} from '../common/public.js'
 
+export const getMainText = (req, res) => {
+    res.send('Hello')
+}
+
 export const getAllStats = (req, res) => {
     const name = req.headers['user-agent']
 
@@ -9,10 +13,6 @@ export const getAllStats = (req, res) => {
         users[name] = 1
     }
     res.json(users)
-}
-
-export const getMainText = (req, res) => {
-    res.send('Hello')
 }
 
 export const getComments = (req, res) => {
