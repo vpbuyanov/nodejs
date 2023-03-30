@@ -6,13 +6,28 @@ export const getMainText = (req, res) => {
 
 export const getAllStats = (req, res) => {
     const name = req.headers['user-agent']
+    let firstHtml =
+        '<table>' +
+            '<tr>' +
+                '<td>Name</td>' +
+                '<td>Count request</td>' +
+            '</tr>'
+    let secondHtml = ''
 
     if (users[name]) {
         users[name] += 1
     }else{
         users[name] = 1
     }
-    res.json(users)
+    for (const key in users) {
+        secondHtml +=
+            `<tr>
+                <td>${key}</td>
+                <td>${users[key]}</td>
+            </tr>`
+    }
+    let resHtml = firstHtml + secondHtml + '</table>'
+    res.send(resHtml)
 }
 
 export const getComments = (req, res) => {
