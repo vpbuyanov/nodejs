@@ -1,10 +1,10 @@
 import {Router} from "express";
 import {getAllStats, getMainText, getComments} from './services/serves.js'
 
-const router = Router()
+const api = Router()
 
-router.get('/', getMainText)
-router.get('/stats', getAllStats)
-router.post('/comments', getComments)
+api.get('/', getMainText)
+api.get('/stats', getAllStats)
+api.post('/comments', getComments)
 
-export default router
+export default api
