@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "start": "node internal/server/main.js",
-    "serve": "nodemon internal/server/main.js"
+    "start": "node internal/server/server.js",
+    "serve": "nodemon internal/server/server.js"
   },
   "name": "nodejs",
   "version": "1.0.0",
-  "main": "internal/server/main.js",
+  "main": "internal/server/server.js",
   "type": "module",
   "author": "vpbuyanov",
   "license": "ISC",
