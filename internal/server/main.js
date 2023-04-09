@@ -2,6 +2,7 @@ import handlers from './handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
+import {AuthorizationRequest} from "../middleware/middleware.js";
 
 const app = express()
 
@@ -15,7 +16,7 @@ app.use(bodyParser.text());
 
 app.use(express.static(path.resolve(__dirname, 'public')))
 
-app.use('/api/v1', handlers)
+app.use('/api/v1', AuthorizationRequest, handlers)
 
 app.listen(port, host, () => {
     console.log(`Server starting on ${hosting}`)
