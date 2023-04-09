@@ -1,4 +1,4 @@
-import api from './api/v1/api.js';
+import handlers from './handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
@@ -15,7 +15,7 @@ app.use(bodyParser.text());
 
 app.use(express.static(path.resolve(__dirname, 'public')))
 
-app.use('/api/v1', api)
+app.use('/api/v1', handlers)
 
 app.listen(port, host, () => {
     console.log(`Server starting on ${hosting}`)
