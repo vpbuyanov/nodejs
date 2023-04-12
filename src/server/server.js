@@ -2,7 +2,7 @@ import handlers from './handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
-import {AuthorizationRequest} from "../middleware/middleware.js";
+import {AuthorizationRequest} from "../middlewares/middleware.js";
 
 const app = express()
 

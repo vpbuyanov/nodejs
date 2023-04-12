@@ -1,4 +1,4 @@
-import {users, comments} from '../../../common/public.js'
+import {users, comments} from '../../common/public.js'
 
 export const getMainText = (req, res) => {
     res.send('Hello')
