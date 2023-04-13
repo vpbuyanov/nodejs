@@ -1,0 +1,11 @@
+{
+  "server": {
+    "port": 8000,
+    "host": "127.0.0.1"
+  },
+
+  "middleware":{
+    "morgan": "dev",
+    "api_key": "123456"
+  }
+ }

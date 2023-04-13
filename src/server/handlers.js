@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {getAllStats, getMainText, getComments} from '../services/service.js'
+import {getAllStats, getMainText, getComments} from '../controllers/controller.js'
 import {inputValidationMiddleware} from "../middlewares/middleware.js";
 
 const handlers = Router()
