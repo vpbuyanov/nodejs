@@ -1,4 +1,4 @@
-import {myConfig} from "../../config.js"
+import config from "config";
 import handlers from './handlers.js';
 import express from 'express';
 import path from 'path';
@@ -12,9 +12,9 @@ import {
 
 const app = express()
 
-const port = myConfig.server.port
-const host = myConfig.server.host
-const hosting = myConfig.server.hosting
+const port      = config.get('server.port')
+const host      = config.get('server.host')
+const hosting   = `http://${host}:${port}`
 
 app.use(myHelmet)
 app.use(myMorgan)
@@ -26,7 +26,7 @@ app.use(bodyParser.text());
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
-    "/api/v2",
+    "/api/v1",
     AuthorizationMiddleware,
     handlers
 )

@@ -1,9 +1,9 @@
-import {myConfig} from "../../config.js"
+import config from "config";
 import helmet from "helmet";
 import morgan from "morgan"
 
 export function AuthorizationMiddleware(req, res, next) {
-    if (req.headers["api-key"] !== myConfig.middleware.api_key && req.method !== "GET"){
+    if (req.headers["api-key"] !== config.get('middleware.api_key')  && req.method !== "GET"){
         return res.send(403, "Access Denied!")
     }
     next()
@@ -27,4 +27,4 @@ export function BadUrlMiddleware(req, res) {
 }
 
 export const myHelmet = helmet()
-export const myMorgan = morgan(myConfig.middleware.morgan)
+export const myMorgan = morgan(config.get('middleware.morgan'))
