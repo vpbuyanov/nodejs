@@ -1,4 +1,9 @@
-import {users, comments} from '../../common/public.js'
+let users = {
+    'name': 0,
+}
+
+let comments = ['are', 'is', 'user']
+
 
 export const getMainText = (req, res) => {
     res.send('Hello')
