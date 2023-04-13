@@ -1,0 +1,9 @@
+server:
+  host: "127.0.0.1"
+  port: 8000
+  hosting: http://${server.host}:${server.port}
+
+middleware:
+  morgan: 'dev'
+  api_key: "1234567890"
+
