@@ -2,6 +2,8 @@ import {connDB, getDb} from "../../config/connDB.js";
 import {getAllComments, addComments, findComment} from "../services/service.js";
 import {ObjectId} from 'mongodb'
 
+let users = {}
+
 let db;
 
 connDB((err) => {
