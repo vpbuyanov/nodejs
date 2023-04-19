@@ -1,5 +1,5 @@
 import config from "config";
-import handlers from './api/v1/handlers.js';
+import handlers from './api/v2/handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
-    "/api/v1",
+    "/api/v2",
     AuthorizationMiddleware,
     handlers
 )

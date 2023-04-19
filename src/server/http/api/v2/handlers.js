@@ -7,6 +7,9 @@ const handlers = Router()
 
 handlers.get('/', getMainText)
 handlers.get('/stats', inputValidationMiddleware, getAllStats)
-handlers.post('/comments', inputValidationMiddleware, postAddComments)
+handlers.get('/comments/:id', getMyComments)
+handlers.get('/comments', getComments)
+handlers.post('/comments', postAddComments)
+
 
 export default handlers
