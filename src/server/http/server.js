@@ -1,5 +1,5 @@
 import config from "config";
-import handlers from './handlers.js';
+import handlers from './api/v1/handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
@@ -8,7 +8,8 @@ import {
     BadUrlMiddleware,
     myHelmet,
     myMorgan
-} from "../middlewares/middleware.js";
+} from "../../middlewares/middleware.js";
+
 
 const app = express()
 
@@ -21,7 +22,7 @@ app.use(myMorgan)
 
 const __dirname = path.resolve()
 
-app.use(bodyParser.text());
+app.use(bodyParser.json());
 
 app.use(express.static(path.resolve(__dirname, 'public')))
 
@@ -33,6 +34,6 @@ app.use(
 
 app.use(BadUrlMiddleware)
 
-app.listen(port, host, () => {
-    console.log(`Server starting on ${hosting}`)
-})
+app.listen(port, () => {
+    console.log(`Listening ${hosting}`);
+});

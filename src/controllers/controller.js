@@ -1,9 +1,16 @@
-let users = {
-    'name': 0,
-}
+import {connDB, getDb} from "../../config/connDB.js";
+import {getAllComments, addComments, findComment} from "../services/service.js";
+import {ObjectId} from 'mongodb'
 
-let comments = ['are', 'is', 'user']
+let db;
 
+connDB((err) => {
+    if (!err) {
+        db = getDb();
+    }else{
+        console.log(`DB connection error: ${err}`);
+    }
+})
 
 export const getMainText = (req, res) => {
     res.send('Hello')
@@ -35,12 +42,28 @@ export const getAllStats = (req, res) => {
     res.send(resHtml)
 }
 
-export const getComments = (req, res) => {
-    let data = req.body;
+export async function getComments(req, res){
+    res.status(200).send(await getAllComments(db))
+}
 
-    if (data){
-        comments.push(data)
+export async function getMyComments(req, res){
+    if (ObjectId.isValid(req.params.id)){
+        const result = await findComment(db, req.params.id)
+        res.status(200).send(result)
+    }else{
+        res.status(400).send("id param is not valid")
     }
+}
 
-    res.send(comments)
+export async function postAddComments(req, res){
+    const {name, text} = req.body;
+
+    if (name && text){
+
+        addComments(db, {name, text}).then(() => {
+            res.status(200).send("data send")
+        })
+    }else{
+        res.status(400).send("Error: No data input")
+    }
 }
