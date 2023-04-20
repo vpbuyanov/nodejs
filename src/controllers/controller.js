@@ -4,16 +4,6 @@ import {ObjectId} from 'mongodb'
 
 let users = {}
 
-let db;
-
-connDB((err) => {
-    if (!err) {
-        db = getDb();
-    }else{
-        console.log(`DB connection error: ${err}`);
-    }
-})
-
 export const getMainText = (req, res) => {
     res.send('Hello')
 }
@@ -45,12 +35,12 @@ export const getAllStats = (req, res) => {
 }
 
 export async function getComments(req, res){
-    res.status(200).send(await getAllComments(db))
+    res.status(200).send(await getAllComments())
 }
 
 export async function getMyComments(req, res){
     if (ObjectId.isValid(req.params.id)){
-        const result = await findComment(db, req.params.id)
+        const result = await findComment(req.params.id)
         res.status(200).send(result)
     }else{
         res.status(400).send("id param is not valid")
@@ -62,7 +52,7 @@ export async function postAddComments(req, res){
 
     if (name && text){
 
-        addComments(db, {name, text}).then(() => {
+        addComments({name, text}).then(() => {
             res.status(200).send("data send")
         })
     }else{
