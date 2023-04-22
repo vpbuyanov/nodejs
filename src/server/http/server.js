@@ -1,5 +1,7 @@
 import config from "config";
-import handlers from './api/v2/handlers.js';
+import handlersv1 from './api/v1/handlers.js';
+import handlersv2 from './api/v2/handlers.js';
+import handlersv3 from './api/v3/handlers.js';
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
@@ -27,9 +29,21 @@ app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
+    "/api/v1",
+    AuthorizationMiddleware,
+    handlersv1
+)
+
+app.use(
     "/api/v2",
     AuthorizationMiddleware,
-    handlers
+    handlersv2
+)
+
+app.use(
+    "/api/v3",
+    AuthorizationMiddleware,
+    handlersv3
 )
 
 app.use(BadUrlMiddleware)

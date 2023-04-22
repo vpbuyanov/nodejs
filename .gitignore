@@ -106,3 +106,5 @@ dist
 .idea/
 
 config/default.json
+
+models.example.json
