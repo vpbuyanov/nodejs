@@ -1,5 +1,4 @@
-import {connDB, getDb} from "../../config/connDB.js";
-import {getAllComments, addComments, findComment} from "../services/service.js";
+import {GetAllComments, AddComments, FindComment, UpdateComment, DeleteComment} from "../services/service.js";
 import {ObjectId} from 'mongodb'
 
 let users = {}
@@ -35,27 +34,51 @@ export const getAllStats = (req, res) => {
 }
 
 export async function getComments(req, res){
-    res.status(200).send(await getAllComments())
+    res.status(200).send(await GetAllComments())
 }
 
-export async function getMyComments(req, res){
+export async function getMyComment(req, res){
     if (ObjectId.isValid(req.params.id)){
-        const result = await findComment(req.params.id)
+        const result = await FindComment(req.params.id)
         res.status(200).send(result)
     }else{
         res.status(400).send("id param is not valid")
     }
 }
 
-export async function postAddComments(req, res){
+export function postAddComments(req, res){
     const {name, text} = req.body;
 
     if (name && text){
 
-        addComments({name, text}).then(() => {
+        AddComments({name, text}).then(() => {
             res.status(200).send("data send")
         })
     }else{
         res.status(400).send("Error: No data input")
+    }
+}
+
+export async function deleteComment(req, res){
+    if (ObjectId.isValid(req.params.id)){
+        await DeleteComment(req.params.id)
+        res.send("comment delete")
+    }else{
+        res.send("id param is not valid")
+    }
+}
+
+export async function updateComment(req, res){
+    const {name, text} = req.body
+
+    if(ObjectId.isValid(req.params.id)){
+        if(name && text){
+            await UpdateComment(req.params.id, name, text)
+            res.send("update data")
+        }else{
+            res.send("no data valid")
+        }
+    }else{
+        res.send("id param is not valid")
     }
 }
