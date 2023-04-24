@@ -4,7 +4,7 @@ import morgan from "morgan"
 
 
 export function AuthorizationMiddleware(req, res, next) {
-    if (req.headers["api-key"] !== config.get('middleware.api_key')  && req.method !== "GET"){
+    if (req.headers["api-key"] !== config.get('middleware.api_key')  && req.method !== "GET" && req.url !== "/login"){
         return res.status(403).send("Access Denied!")
     }
     next()
