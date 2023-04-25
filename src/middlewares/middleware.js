@@ -1,11 +1,14 @@
-import config from "config";
 import helmet from "helmet";
 import morgan from "morgan"
+import Config from "../../config/config.js";
+import {getApiKeys} from "../services/service.js";
 
+const config = new Config()
 
-export function AuthorizationMiddleware(req, res, next) {
-    if (req.headers["api-key"] !== config.get('middleware.api_key')  && req.method !== "GET" && req.url !== "/login"){
-        return res.status(403).send("Access Denied!")
+export async function AuthorizationMiddleware(req, res, next) {
+    const keys = await getApiKeys()
+    if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
+        return res.status(403).send('you do not have access')
     }
     next()
 }
@@ -28,4 +31,4 @@ export function BadUrlMiddleware(req, res) {
 }
 
 export const myHelmet = helmet()
-export const myMorgan = morgan(config.get('middleware.morgan'))
+export const myMorgan = morgan(config.getServer().morgan)

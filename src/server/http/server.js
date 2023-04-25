@@ -1,7 +1,7 @@
-import config from "config";
 import handlersv1 from './api/v1/handlers.js';
 import handlersv2 from './api/v2/handlers.js';
 import handlersv3 from './api/v3/handlers.js';
+import Config from "../../../config/config.js";
 import express from 'express';
 import path from 'path';
 import bodyParser from "body-parser";
@@ -12,12 +12,9 @@ import {
     myMorgan
 } from "../../middlewares/middleware.js";
 
+const config = new Config().getServer()
 
 const app = express()
-
-const port      = config.get('server.port')
-const host      = config.get('server.host')
-const hosting   = `http://${host}:${port}`
 
 app.use(myHelmet)
 app.use(myMorgan)
@@ -48,6 +45,6 @@ app.use(
 
 app.use(BadUrlMiddleware)
 
-app.listen(port, () => {
-    console.log(`Listening ${hosting}`);
+app.listen(config.port, config.host, () => {
+    console.log(`Listening ${config.hosting}`);
 });

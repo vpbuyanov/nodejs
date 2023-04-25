@@ -69,8 +69,12 @@ export async function getMyComment(req, res){
 
 export async function deleteComment(req, res){
     if (ObjectId.isValid(req.params.id)){
-        await Delete('comments', req.params.id)
-        res.send("comment delete")
+        if (await Delete('comments', req.params.id)){
+            res.send("comment delete")
+        }else{
+            res.status(400).send('no find comment')
+        }
+
     }else{
         res.status(400).send("id param is not valid")
     }
@@ -103,7 +107,7 @@ export async function login(req, res) {
         }
 
         await Create('users', data)
-        res.send("you are successfully registered")
+        res.send(`you are successfully registered, your api_key: ${api_key}`)
     }else{
         res.status(400).send("no sender name")
     }
@@ -136,11 +140,24 @@ export async function getMyModel(req, res) {
 
 export async function createModels(req, res) {
     const data = req.body
-    await Create('models', data)
-    res.send("creating models")
+    if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
+        await Create('models', data)
+        res.send("creating models")
+    }else{
+        res.status(400).send("no valid data.\n" +
+            "Example send json {\n" +
+            "\t\"name\": \"seva\",\n" +
+            "\t\"name_model\": \"triangle\",\n" +
+            "\t\"type\": \"3d\",\n" +
+            "\t\"model\": {},\n" +
+            "\t\"description\": \"hi\",\n" +
+            "\t\"comments\": []\n" +
+            "}")
+    }
+
 }
 
-export async function updateModel(req, res){
+export async function updateModel(req, res) {
     const data = req.body
     const id = req.params.id
     if (ObjectId.isValid(id)){
@@ -168,8 +185,11 @@ export async function deleteModel(req, res) {
     const id = req.params.id
 
     if(ObjectId.isValid(id)){
-        await Delete('models', req.params.id)
-        res.send("delete model")
+        if (await Delete('models', req.params.id)){
+            res.send("delete model")
+        }else {
+            res.status(400).send("no find model")
+        }
     }else{
         res.status(400).send("no valid id")
     }
