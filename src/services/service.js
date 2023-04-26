@@ -38,10 +38,13 @@ export async function ReadOne(collections, id) {
 
 export async function Update(collections, id, data) {
     try {
-        if (collections === "models"){
-            data.last_update = new Date()
+        const object = await db.collection(collections).findOne({_id: new ObjectId(id)})
+        if (object) {
+            if (collections === "models") {
+                data.last_update = new Date()
+            }
+            return await object.updateOne({_id: new ObjectId(id)}, {$set: data})
         }
-        return await db.collection(collections).updateOne({_id: new ObjectId(id)}, {$set: data})
     }catch (err){
         return err
     }
@@ -49,9 +52,9 @@ export async function Update(collections, id, data) {
 
 export async function Delete(collections, id) {
     try {
-        const model = await db.collection(collections).findOne({_id: new ObjectId(id)})
-        if (model){
-            return await model.deleteOne({_id: new ObjectId(id)})
+        const object = await db.collection(collections).findOne({_id: new ObjectId(id)})
+        if (object){
+            return await object.deleteOne({_id: new ObjectId(id)})
         }else{
             return null
         }
