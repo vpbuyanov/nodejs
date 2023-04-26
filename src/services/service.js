@@ -59,11 +59,3 @@ export async function Delete(collections, id) {
         return err
     }
 }
-
-export async function getApiKeys() {
-    const keys = []
-    const objectKeys = await ReadAll('users')
-
-    objectKeys.forEach(element => keys.push(element.api_key))
-    return keys
-}

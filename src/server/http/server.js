@@ -7,12 +7,14 @@ import path from 'path';
 import bodyParser from "body-parser";
 import {
     AuthorizationMiddleware,
-    BadUrlMiddleware,
+    BadUrlMiddleware, errorsValidations,
     myHelmet,
     myMorgan
 } from "../../middlewares/middleware.js";
 
 const config = new Config().getServer()
+
+let error = new Error()
 
 const app = express()
 
@@ -44,6 +46,8 @@ app.use(
 )
 
 app.use(BadUrlMiddleware)
+
+app.use(errorsValidations)
 
 app.listen(config.port, config.host, () => {
     console.log(`Listening ${config.hosting}`);

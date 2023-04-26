@@ -43,127 +43,146 @@ export function getAllStats(req, res) {
     res.send(resHtml)
 }
 
-export async function postAddComments(req, res){
-    const data = req.body;
+export async function postAddComments(req, res, next){
+    try {
+        const data = req.body;
 
-    if (data.name && data.text){
-        await Create("comments", data)
-        res.status(200).send("add comments")
-    }else{
-        res.status(400).send("Error: No data input")
-    }
-}
-
-export async function getComments(req, res){
-    res.status(200).send(await ReadAll('comments'))
-}
-
-export async function getMyComment(req, res){
-    if (ObjectId.isValid(req.params.id)){
-        const result = await ReadOne('comments', req.params.id)
-        res.status(200).send(result)
-    }else{
-        res.status(400).send("id param is not valid")
-    }
-}
-
-export async function deleteComment(req, res){
-    if (ObjectId.isValid(req.params.id)){
-        if (await Delete('comments', req.params.id)){
-            res.send("comment delete")
+        if (data.name && data.text){
+            await Create("comments", data)
+            res.status(200).send("add comments")
         }else{
-            res.status(400).send('no find comment')
+            res.status(400).send("Error: No data input")
         }
-
-    }else{
-        res.status(400).send("id param is not valid")
+    }catch (err) {
+        next(err)
     }
 }
 
-export async function updateComment(req, res){
-    const {name, text} = req.body
+export async function getComments(req, res, next){
+    try {
+        res.status(200).send(await ReadAll('comments'))
+    }catch (err) {
+        next(err)
+    }
 
-    if(ObjectId.isValid(req.params.id)){
-        if(name && text){
-            await Update('comments', req.params.id, name, text)
-            res.send("update data")
+}
+
+export async function getMyComment(req, res, next){
+    try{
+        if (ObjectId.isValid(req.params.id)) {
+            const result = await ReadOne('comments', req.params.id)
+            res.status(200).send(result)
+        } else {
+            res.status(400).send("id param is not valid")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function deleteComment(req, res, next){
+    try {
+        if (ObjectId.isValid(req.params.id)){
+            if (await Delete('comments', req.params.id)){
+                res.send("comment delete")
+            }else{
+                res.status(400).send('no find comment')
+            }
+
         }else{
-            res.status(400).send("no data valid")
+            res.status(400).send("id param is not valid")
         }
-    }else{
-        res.status(400).send("id param is not valid")
+    }catch (err) {
+        next(err)
     }
+
 }
 
-export async function login(req, res) {
-    const { name } = req.body
+export async function updateComment(req, res, next){
+    try {
+        const {name, text} = req.body
 
-    if (name){
-        const number = getRandomInt(1000)
-        const api_key = name + number
-        const data = {
-            "name": name,
-            "api_key": api_key
+        if(ObjectId.isValid(req.params.id)){
+            if(name && text){
+                await Update('comments', req.params.id, name, text)
+                res.send("update data")
+            }else{
+                res.status(400).send("no data valid")
+            }
+        }else{
+            res.status(400).send("id param is not valid")
         }
-
-        await Create('users', data)
-        res.send(`you are successfully registered, your api_key: ${api_key}`)
-    }else{
-        res.status(400).send("no sender name")
+    }catch (err) {
+        next(err)
     }
 }
 
-export async function deleteAccount(req, res) {
-    const id = req.params.id
+export async function login(req, res, next) {
+    try {
+        const { name } = req.body
 
-    if(ObjectId.isValid(id)){
-        await Delete('users', id)
-        res.send("account deleted")
-    }else{
-        res.status(400).send("no valid id")
+        if (name){
+            const number = getRandomInt(1000)
+            const api_key = name + number
+            const data = {
+                "name": name,
+                "api_key": api_key
+            }
+
+            await Create('users', data)
+            res.send(`you are successfully registered, your api_key: ${api_key}`)
+        }else{
+            res.status(400).send("no sender name")
+        }
+    }catch (err) {
+        next(err)
     }
 }
 
-export async function getAllModels(req, res) {
-    res.send(await ReadAll('models'))
-}
+export async function deleteAccount(req, res, next) {
+    try {
+        const id = req.params.id
 
-export async function getMyModel(req, res) {
-    const id = req.params.id
-
-    if(ObjectId.isValid(id)){
-        res.send(await ReadAll('models', req.params.id))
-    }else{
-        res.status(400).send("no valid id")
-    }
-}
-
-export async function createModels(req, res) {
-    const data = req.body
-    if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
-        await Create('models', data)
-        res.send("creating models")
-    }else{
-        res.status(400).send("no valid data.\n" +
-            "Example send json {\n" +
-            "\t\"name\": \"seva\",\n" +
-            "\t\"name_model\": \"triangle\",\n" +
-            "\t\"type\": \"3d\",\n" +
-            "\t\"model\": {},\n" +
-            "\t\"description\": \"hi\",\n" +
-            "\t\"comments\": []\n" +
-            "}")
+        if(ObjectId.isValid(id)){
+            await Delete('users', id)
+            res.send("account deleted")
+        }else{
+            res.status(400).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
     }
 
 }
 
-export async function updateModel(req, res) {
-    const data = req.body
-    const id = req.params.id
-    if (ObjectId.isValid(id)){
+export async function getAllModels(req, res, next) {
+    try {
+        res.send(await ReadAll('models'))
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function getMyModel(req, res, next) {
+    try {
+        const id = req.params.id
+
+        if(ObjectId.isValid(id)){
+            res.send(await ReadAll('models', req.params.id))
+        }else{
+            res.status(400).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function createModels(req, res, next) {
+    try {
+        const data = req.body
         if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
-            await Update('models', id, data)
-            res.send("update model")
+            await Create('models', data)
+            res.send("creating models")
         }else{
             res.status(400).send("no valid data.\n" +
                 "Example send json {\n" +
@@ -175,22 +194,52 @@ export async function updateModel(req, res) {
                 "\t\"comments\": []\n" +
                 "}")
         }
-    }else{
-        res.status(400).send("no valid id")
+    }catch (err) {
+        next(err)
     }
-
 }
 
-export async function deleteModel(req, res) {
-    const id = req.params.id
-
-    if(ObjectId.isValid(id)){
-        if (await Delete('models', req.params.id)){
-            res.send("delete model")
-        }else {
-            res.status(400).send("no find model")
+export async function updateModel(req, res, next) {
+    try {
+        const data = req.body
+        const id = req.params.id
+        if (ObjectId.isValid(id)){
+            if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
+                await Update('models', id, data)
+                res.send("update model")
+            }else{
+                res.status(400).send("no valid data.\n" +
+                    "Example send json {\n" +
+                    "\t\"name\": \"seva\",\n" +
+                    "\t\"name_model\": \"triangle\",\n" +
+                    "\t\"type\": \"3d\",\n" +
+                    "\t\"model\": {},\n" +
+                    "\t\"description\": \"hi\",\n" +
+                    "\t\"comments\": []\n" +
+                    "}")
+            }
+        }else{
+            res.status(400).send("no valid id")
         }
-    }else{
-        res.status(400).send("no valid id")
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function deleteModel(req, res, next) {
+    try {
+        const id = req.params.id
+
+        if(ObjectId.isValid(id)){
+            if (await Delete('models', req.params.id)){
+                res.send("delete model")
+            }else {
+                res.status(400).send("no find model")
+            }
+        }else{
+            res.status(400).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
     }
 }
