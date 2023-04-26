@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-
 class Server{
     constructor(host, port, morgan) {
         this.host = host
@@ -12,7 +11,6 @@ class Server{
         this.morgan = morgan
     }
 }
-
 
 class MongoDB{
     constructor (host, port, db_name) {
@@ -35,15 +33,14 @@ class MongoDB{
     }
 }
 
-
 export default class Config{
-    #serverHost     = process.env.SERVER_HOST || '127.0.0.1'
-    #serverPort     = process.env.SERVER_PORT || 8000
+    #serverHost     = process.env.SERVER_HOST   || '127.0.0.1'
+    #serverPort     = process.env.SERVER_PORT   || 8000
     #serverMorgan   = process.env.SERVER_MORGAN || 'dev'
 
-    #mongoHost      = process.env.MONGODB_HOST || '127.0.0.1'
-    #mongoPort      = process.env.MONGODB_PORT || 27017
-    #mongoName      = process.env.MONGODB_NAME || 'local'
+    #mongoHost      = process.env.MONGODB_HOST  || '127.0.0.1'
+    #mongoPort      = process.env.MONGODB_PORT  || 27017
+    #mongoName      = process.env.MONGODB_NAME  || 'local'
 
     getServer(){
         return new Server(this.#serverHost, this.#serverPort, this.#serverMorgan)
