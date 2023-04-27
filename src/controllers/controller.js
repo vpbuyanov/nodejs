@@ -6,6 +6,7 @@ import {
     FindToId
 } from "../services/service.js";
 import {ObjectId} from 'mongodb'
+import e from "express";
 
 let users = {}
 
@@ -41,6 +42,46 @@ export function getAllStats(req, res) {
     }
     let resHtml = firstHtml + secondHtml + '</table>'
     res.send(resHtml)
+}
+
+export async function createComment(req, res, next) {
+    try {
+        const data = req.body
+        if (data.name && data.text){
+            await Create("comments", data)
+            res.send("comments create")
+        }else{
+            res.status(400).send("not data valid. Please send json {'name': 'yourName', 'text': 'textYourComment'}")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function getComment(req, res, next) {
+    try {
+        if (await FindToId("comments")){
+            res.send(await FindToId("comments"))
+        }else{
+            res.status(400).send("no comment in database")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function getMyComment(req, res, next) {
+    try {
+        const id = req.params.id
+
+        if(ObjectId.isValid(id)){
+            res.send(await FindToId("comments", {}, {}, false, req.params.id))
+        }else{
+            res.status(400).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
+    }
 }
 
 export async function login(req, res, next) {
@@ -81,10 +122,10 @@ export async function deleteAccount(req, res, next) {
 
 export async function getAllModels(req, res, next) {
     try {
-        if (await FindToId('models', {}, {name: 1})){
-            res.send(await FindToId('models', {}, {name: 1}))
+        if (await FindToId("models", {}, {name: 1})){
+            res.send(await FindToId("models", {}, {name: 1}))
         }else{
-            res.status(400).send('no model in database')
+            res.status(400).send("no model in database")
         }
     }catch (err) {
         next(err)
@@ -96,7 +137,7 @@ export async function getMyModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await FindToId('models', {}, {}, false, req.params.id))
+            res.send(await FindToId("models", {}, {}, false, req.params.id))
         }else{
             res.status(400).send("no valid id")
         }
@@ -109,7 +150,7 @@ export async function createModels(req, res, next) {
     try {
         const data = req.body
         if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
-            await Create('models', data)
+            await Create("models", data)
             res.send("creating models")
         }else{
             res.status(400).send("no valid data.\n" +

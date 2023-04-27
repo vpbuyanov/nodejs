@@ -9,15 +9,18 @@ import {
     getMyModel,
     updateModel,
     deleteModel,
-    createModels
+    createModels, createComment, getComment, getMyComment
 } from '../../../../controllers/controller.js'
 
 const handlers = Router()
 
 handlers.get('/', getMainText)
+handlers.get('/comments', getComment)
+handlers.get('/comments/:id', getMyComment)
 handlers.get('/models', getAllModels)
 handlers.get('/models/:id', getMyModel)
 
+handlers.post('/comments', createComment)
 handlers.post('/models', createModels)
 handlers.post('/login', login)
 

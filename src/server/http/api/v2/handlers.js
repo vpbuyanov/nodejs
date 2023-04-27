@@ -1,16 +1,18 @@
 import {Router} from "express";
 import {
-    getMainText,
+    createComment, getAllStats,
+    getComment,
+    getMainText, getMyComment,
 } from '../../../../controllers/controller.js'
 
 const handlers = Router()
 
 handlers.get('/', getMainText)
+handlers.get('/comments', getComment)
+handlers.get('/comments/:id', getMyComment)
 
-// handlers.post('/comments')
-//
-// handlers.delete('/comments/:id')
-//
-// handlers.put('/comments/:id')
+handlers.post('/comments', createComment)
+handlers.post('/stats', getAllStats)
+
 
 export default handlers
