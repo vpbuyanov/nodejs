@@ -30,7 +30,7 @@ handlers.post('/login', login)
 
 handlers.put('/models/:id', updateModel)
 
-handlers.delete('/account/delete/:id', deleteAccount)
+handlers.delete('/account/delete', deleteAccount)
 handlers.delete('/models/:id', deleteModel)
 
 export default handlers

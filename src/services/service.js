@@ -63,17 +63,56 @@ export async function Delete(collections, id) {
     }
 }
 
-export async function DeleteApiKey(apikey){
-
+export async function GetApiKeys() {
+    try {
+        const keys = []
+        let objectKeys = await ReadAll('users')
+        objectKeys.forEach(element => keys.push(element.api_key))
+        if (keys){
+            return keys
+        }else{
+            return null
+        }
+    }catch (err) {
+        return err
+    }
 }
 
-export async function getApiKeys() {
-    const keys = []
-    let objectKeys = await ReadAll('users')
-    objectKeys.forEach(element => keys.push(element.api_key))
-    if (keys){
-        return keys
-    }else{
-        return null
+export async function DeleteApiKey(apikey){
+    try {
+        const object = await db.collection('users').findOne({ 'api_key': apikey })
+        if (object){
+            return await db.collection('users').deleteOne({ 'api_key': apikey })
+        }else{
+            return null
+        }
+    }catch (err) {
+        return err
+    }
+}
+
+export async function ReadAllModel(id = 0) {
+    try{
+        let objects
+        let resulArr = []
+        let resultObject = {}
+        let object = {}
+        if (id !== 0){
+            objects = await ReadOne('models', id)
+            resultObject.id = objects._id
+            resultObject.name = objects.name
+            return resultObject
+        }else{
+            objects = await ReadAll('models');
+            objects.forEach(el => {
+                object.id = el['_id']
+                object.name = el['name_model']
+                resulArr.push(object)
+            })
+            return resulArr
+        }
+
+    }catch (err) {
+            return err
     }
 }

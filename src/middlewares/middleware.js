@@ -1,12 +1,12 @@
 import helmet from "helmet";
 import morgan from "morgan"
-import {getApiKeys} from "../services/service.js";
+import {GetApiKeys} from "../services/service.js";
 import Config from "../../config/config.js";
 
 const config = new Config()
 
 export async function AuthorizationMiddleware(req, res, next) {
-    const keys = await getApiKeys()
+    const keys = await GetApiKeys()
     if (keys) {
         if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
             return res.status(403).send('access denied')

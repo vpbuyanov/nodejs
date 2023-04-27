@@ -3,7 +3,7 @@ import {
     ReadAll,
     ReadOne,
     Update,
-    Delete
+    Delete, DeleteApiKey, ReadAllModel
 } from "../services/service.js";
 import {ObjectId} from 'mongodb'
 
@@ -141,13 +141,11 @@ export async function login(req, res, next) {
 
 export async function deleteAccount(req, res, next) {
     try {
-        const id = req.params.id
-
-        if(ObjectId.isValid(id)){
-            await Delete('users', id)
-            res.send("account deleted")
+        const apikey = req.headers['apikey']
+        if (await DeleteApiKey(apikey)){
+            res.send('delete api-key')
         }else{
-            res.status(400).send("no valid id")
+            res.status(400).send('not found api in database')
         }
     }catch (err) {
         next(err)
@@ -157,7 +155,11 @@ export async function deleteAccount(req, res, next) {
 
 export async function getAllModels(req, res, next) {
     try {
-        res.send(await ReadAll('models'))
+        if (await ReadAllModel()){
+            res.send(await ReadAllModel())
+        }else{
+            res.status(400).send('no model in database')
+        }
     }catch (err) {
         next(err)
     }
@@ -168,7 +170,7 @@ export async function getMyModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await ReadAll('models', req.params.id))
+            res.send(await ReadAllModel(req.params.id))
         }else{
             res.status(400).send("no valid id")
         }
@@ -204,7 +206,7 @@ export async function updateModel(req, res, next) {
         const data = req.body
         const id = req.params.id
         if (ObjectId.isValid(id)){
-            if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
+            if (data.name || data.name_model || data.type || data.model || data.description || data.comments){
                 await Update('models', id, data)
                 res.send("update model")
             }else{

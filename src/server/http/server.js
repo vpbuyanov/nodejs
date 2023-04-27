@@ -14,8 +14,6 @@ import {
 
 const config = new Config().getServer()
 
-let error = new Error()
-
 const app = express()
 
 app.use(myHelmet)
