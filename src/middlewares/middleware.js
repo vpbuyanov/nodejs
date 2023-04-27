@@ -8,6 +8,9 @@ const config = new Config()
 export async function AuthorizationMiddleware(req, res, next) {
     try {
         const keys = await GetApiKeys()
+        if (keys.status){
+            next(keys.status)
+        }
         if (keys) {
             if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
                 return res.status(403).send('access denied')

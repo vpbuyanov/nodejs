@@ -20,26 +20,16 @@ export async function Create(collections, data)  {
     }
 }
 
-export async function ReadAll(collections) {
+export async function FindToId(collections, filters = {}, projection = {}, allFind = true, id = 0){
     try {
-        return await db.collection(collections).find().toArray()
+        const collect = db.collection(collections)
+        if (allFind){
+            return await collect.find(filters).project(projection).toArray()
+        }else{
+            return await collect.findOne({_id: new ObjectId(id)})
+        }
     }catch (err) {
-        return err
-    }
-}
-
-export async function ReadAllModel(collections) {
-    try {
-        return await db.collection(collections).find({ }, {projection: {"name": 1}}).toArray()
-    }catch (err) {
-        return err
-    }
-}
-
-export async function ReadOne(collections, id) {
-    try {
-        return await db.collection(collections).findOne({_id: new ObjectId(id)})
-    }catch (err) {
+        err.message = 'not found in database'
         return err
     }
 }
@@ -74,7 +64,7 @@ export async function Delete(collections, id) {
 export async function GetApiKeys() {
     try {
         const keys = []
-        let objectKeys = await ReadAll('users')
+        let objectKeys = await FindToId('users')
         objectKeys.forEach(element => keys.push(element.api_key))
         if (keys){
             return keys

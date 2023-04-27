@@ -1,9 +1,9 @@
 import {
     Create,
-    ReadAllModel,
-    ReadOne,
     Update,
-    Delete, DeleteApiKey
+    Delete,
+    DeleteApiKey,
+    FindToId
 } from "../services/service.js";
 import {ObjectId} from 'mongodb'
 
@@ -41,71 +41,6 @@ export function getAllStats(req, res) {
     }
     let resHtml = firstHtml + secondHtml + '</table>'
     res.send(resHtml)
-}
-
-export async function postAddComments(req, res, next){
-    try {
-        const data = req.body;
-
-        if (data.name && data.text){
-            await Create("comments", data)
-            res.status(200).send("add comments")
-        }else{
-            res.status(400).send("Error: No data input")
-        }
-    }catch (err) {
-        next(err)
-    }
-}
-
-export async function getMyComment(req, res, next){
-    try{
-        if (ObjectId.isValid(req.params.id)) {
-            const result = await ReadOne('comments', req.params.id)
-            res.status(200).send(result)
-        } else {
-            res.status(400).send("id param is not valid")
-        }
-    }catch (err) {
-        next(err)
-    }
-}
-
-export async function deleteComment(req, res, next){
-    try {
-        if (ObjectId.isValid(req.params.id)){
-            if (await Delete('comments', req.params.id)){
-                res.send("comment delete")
-            }else{
-                res.status(400).send('no find comment')
-            }
-
-        }else{
-            res.status(400).send("id param is not valid")
-        }
-    }catch (err) {
-        next(err)
-    }
-
-}
-
-export async function updateComment(req, res, next){
-    try {
-        const {name, text} = req.body
-
-        if(ObjectId.isValid(req.params.id)){
-            if(name && text){
-                await Update('comments', req.params.id, name, text)
-                res.send("update data")
-            }else{
-                res.status(400).send("no data valid")
-            }
-        }else{
-            res.status(400).send("id param is not valid")
-        }
-    }catch (err) {
-        next(err)
-    }
 }
 
 export async function login(req, res, next) {
@@ -146,8 +81,8 @@ export async function deleteAccount(req, res, next) {
 
 export async function getAllModels(req, res, next) {
     try {
-        if (await ReadAllModel('models')){
-            res.send(await ReadAllModel('models'))
+        if (await FindToId('models', {}, {name: 1})){
+            res.send(await FindToId('models', {}, {name: 1}))
         }else{
             res.status(400).send('no model in database')
         }
@@ -161,7 +96,7 @@ export async function getMyModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await ReadOne('models', req.params.id))
+            res.send(await FindToId('models', {}, {}, false, req.params.id))
         }else{
             res.status(400).send("no valid id")
         }
