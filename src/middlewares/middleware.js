@@ -6,15 +6,19 @@ import Config from "../../config/config.js";
 const config = new Config()
 
 export async function AuthorizationMiddleware(req, res, next) {
-    const keys = await GetApiKeys()
-    if (keys) {
-        if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
-            return res.status(403).send('access denied')
+    try {
+        const keys = await GetApiKeys()
+        if (keys) {
+            if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
+                return res.status(403).send('access denied')
+            }else{
+                next()
+            }
         }else{
-            next()
+            res.send('not apikey in databases')
         }
-    }else{
-        res.send('not apikey in databases')
+    }catch (err) {
+        next(err)
     }
 }
 
@@ -31,7 +35,8 @@ export function inputValidationMiddleware(req, res, next) {
     next();
 }
 
-export function errorsValidations(err, req, res) {
+export function errorsValidations(err, req, res, next) {
+    err.status = 500
     res.status(err.status).send(err.message)
 }
 

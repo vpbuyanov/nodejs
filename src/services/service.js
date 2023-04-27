@@ -28,6 +28,14 @@ export async function ReadAll(collections) {
     }
 }
 
+export async function ReadAllModel(collections) {
+    try {
+        return await db.collection(collections).find({ }, {projection: {"name": 1}}).toArray()
+    }catch (err) {
+        return err
+    }
+}
+
 export async function ReadOne(collections, id) {
     try {
         return await db.collection(collections).findOne({_id: new ObjectId(id)})
@@ -43,7 +51,7 @@ export async function Update(collections, id, data) {
             if (collections === "models") {
                 data.last_update = new Date()
             }
-            return await object.updateOne({_id: new ObjectId(id)}, {$set: data})
+            return await db.collection(collections).updateOne({_id: new ObjectId(id)}, {$set: data})
         }
     }catch (err){
         return err
@@ -54,7 +62,7 @@ export async function Delete(collections, id) {
     try {
         const object = await db.collection(collections).findOne({_id: new ObjectId(id)})
         if (object){
-            return await object.deleteOne({_id: new ObjectId(id)})
+            return await db.collection(collections).deleteOne({_id: new ObjectId(id)})
         }else{
             return null
         }
@@ -91,28 +99,3 @@ export async function DeleteApiKey(apikey){
     }
 }
 
-export async function ReadAllModel(id = 0) {
-    try{
-        let objects
-        let resulArr = []
-        let resultObject = {}
-        let object = {}
-        if (id !== 0){
-            objects = await ReadOne('models', id)
-            resultObject.id = objects._id
-            resultObject.name = objects.name
-            return resultObject
-        }else{
-            objects = await ReadAll('models');
-            objects.forEach(el => {
-                object.id = el['_id']
-                object.name = el['name_model']
-                resulArr.push(object)
-            })
-            return resulArr
-        }
-
-    }catch (err) {
-            return err
-    }
-}

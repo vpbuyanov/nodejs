@@ -1,9 +1,9 @@
 import {
     Create,
-    ReadAll,
+    ReadAllModel,
     ReadOne,
     Update,
-    Delete, DeleteApiKey, ReadAllModel
+    Delete, DeleteApiKey
 } from "../services/service.js";
 import {ObjectId} from 'mongodb'
 
@@ -56,15 +56,6 @@ export async function postAddComments(req, res, next){
     }catch (err) {
         next(err)
     }
-}
-
-export async function getComments(req, res, next){
-    try {
-        res.status(200).send(await ReadAll('comments'))
-    }catch (err) {
-        next(err)
-    }
-
 }
 
 export async function getMyComment(req, res, next){
@@ -155,8 +146,8 @@ export async function deleteAccount(req, res, next) {
 
 export async function getAllModels(req, res, next) {
     try {
-        if (await ReadAllModel()){
-            res.send(await ReadAllModel())
+        if (await ReadAllModel('models')){
+            res.send(await ReadAllModel('models'))
         }else{
             res.status(400).send('no model in database')
         }
@@ -170,7 +161,7 @@ export async function getMyModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await ReadAllModel(req.params.id))
+            res.send(await ReadOne('models', req.params.id))
         }else{
             res.status(400).send("no valid id")
         }
@@ -206,7 +197,7 @@ export async function updateModel(req, res, next) {
         const data = req.body
         const id = req.params.id
         if (ObjectId.isValid(id)){
-            if (data.name || data.name_model || data.type || data.model || data.description || data.comments){
+            if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
                 await Update('models', id, data)
                 res.send("update model")
             }else{

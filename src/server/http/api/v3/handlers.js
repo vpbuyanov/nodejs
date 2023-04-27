@@ -2,10 +2,6 @@ import {Router} from "express";
 import {
     getMainText,
 
-    getComments,
-    postAddComments,
-    getMyComment,
-
     deleteAccount,
     login,
 
@@ -19,12 +15,9 @@ import {
 const handlers = Router()
 
 handlers.get('/', getMainText)
-handlers.get('/comments', getComments)
-handlers.get('/comments/:id', getMyComment)
 handlers.get('/models', getAllModels)
 handlers.get('/models/:id', getMyModel)
 
-handlers.post('/comments', postAddComments)
 handlers.post('/models', createModels)
 handlers.post('/login', login)
 
