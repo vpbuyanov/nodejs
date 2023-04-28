@@ -1,0 +1,131 @@
+paths:
+  /:
+    get:
+      summary: home page
+      tags: [Home]
+      description: send plain text "Hello"
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: send "Hello" and status code 200
+
+  /comments:
+    get:
+      tags: [Get Comments]
+      summary: see all comments
+      description: return all comments
+      produces:
+        - application/json
+      responses:
+        200:
+          description: sends an array of comment objects
+    post:
+      tags: [Post Comments]
+      summary: create new comment
+      description: create comment
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name:
+                type: string
+              text:
+                type: string
+            example:
+              name: seva
+              text: good comment
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: sends text "comment create"
+
+
+  /comments/{id}:
+    get:
+      tags: [Get Comments]
+      summary: see one comments
+      description: return comment
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the comment to get.
+      responses:
+        200:
+          description: sends json comment
+
+  /models:
+    get:
+      tags: [Get Models]
+      summary: see all models
+      description: return all models with their names and id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: sends an array of models objects
+          content:
+            application/json:
+              schema:      # Request body contents
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name_model:
+                    type: string
+              example:   # Sample object
+                _id: 10
+                name_model: Triangle
+
+  /models/{id}:
+    get:
+      summary: see one models
+      tags: [Get Models]
+      description: return model
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the model to get.
+      responses:
+        200:
+          description: sends json model
+          content:
+            application/json:
+              schema:      # Request body contents
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  name_model:
+                    type: string
+                  type:
+                    type: string
+                  model:
+                    type: object
+                  descriptions:
+                    type: string
+                  comments:
+                    type: string
+                  time_create:
+                    type: string
+                  last_update:
+                    type: string
+              example:   # Sample object
+                _id: 10
+                name: Seva
+                name_model: Triangle
+                type: 3d
+                model: {"test": "text"}
+                descriptions: triangle in 3d
+                comments: good triangle
+                time_create: 2023-04-27T10:09:21.597Z
+                last_update: 2023-04-27T10:09:21.597Z
