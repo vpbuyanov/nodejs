@@ -184,7 +184,7 @@ export async function updateModel(req, res, next) {
                     "\t\"type\": \"3d\",\n" +
                     "\t\"model\": {},\n" +
                     "\t\"description\": \"hi\",\n" +
-                    "\t\"comments\": []\n" +
+                    "\t\"comments\": \"\" \n" +
                     "}")
             }
         }else{

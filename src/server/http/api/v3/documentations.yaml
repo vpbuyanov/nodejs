@@ -1,3 +1,10 @@
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      in: header
+      name: apikey
+
 paths:
   /:
     get:
@@ -10,9 +17,42 @@ paths:
         200:
           description: send "Hello" and status code 200
 
+  /login:
+    post:
+      tags: [API]
+      summary: create apikey
+      description: create apikey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name:
+                type: string
+            example:
+              name: seva
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: sends your apikey
+
+  /account/delete:
+    delete:
+      tags: [API]
+      security:
+        - apikey: []
+      summary: delete apikey
+      description: delete apikey
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: deleted your apikey
+
   /comments:
     get:
-      tags: [Get Comments]
+      tags: [Comments]
       summary: see all comments
       description: return all comments
       produces:
@@ -21,10 +61,11 @@ paths:
         200:
           description: sends an array of comment objects
     post:
-      tags: [Post Comments]
+      security:
+        - apikey: []
+      tags: [Comments]
       summary: create new comment
       description: create comment
-
       requestBody:
         required: true
         content:
@@ -43,11 +84,10 @@ paths:
         200:
           description: sends text "comment create"
 
-
   /comments/{id}:
     get:
-      tags: [Get Comments]
-      summary: see one comments
+      tags: [Comments]
+      summary: see one comment
       description: return comment
       parameters:
         - in: path
@@ -58,10 +98,51 @@ paths:
       responses:
         200:
           description: sends json comment
+    put:
+      security:
+        - apikey: []
+      tags: [Comments]
+      summary: update one comment
+      description: return text
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the comment to get.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name:
+                type: string
+              text:
+                type: string
+            example:
+              name: seva
+              text: good comment
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: sends text "update comment"
+    delete:
+      security:
+        - apikey: []
+      tags: [Comments]
+      summary: delete one comment
+      description: return text
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the comment to get.
 
   /models:
     get:
-      tags: [Get Models]
+      tags: [Models]
       summary: see all models
       description: return all models with their names and id
       produces:
@@ -81,11 +162,46 @@ paths:
               example:   # Sample object
                 _id: 10
                 name_model: Triangle
+    post:
+      security:
+        - apikey: []
+      tags: [Models]
+      summary: create new model
+      description: create model
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name:
+                type: string
+              name_model:
+                type: string
+              type:
+                type: string
+              model:
+                type: object
+              descriptions:
+                type: string
+              comments:
+                type: string
+            example:
+              name: seva
+              name_model: cube
+              type: 3d
+              model: {data: "12431814828142441"}
+              descriptions: good cube
+              comments: good 3d model
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: sends text "model create"
 
   /models/{id}:
     get:
       summary: see one models
-      tags: [Get Models]
+      tags: [Models]
       description: return model
       parameters:
         - in: path
@@ -124,8 +240,61 @@ paths:
                 name: Seva
                 name_model: Triangle
                 type: 3d
-                model: {"test": "text"}
+                model: {data: "12431814828142441"}
                 descriptions: triangle in 3d
                 comments: good triangle
                 time_create: 2023-04-27T10:09:21.597Z
                 last_update: 2023-04-27T10:09:21.597Z
+    put:
+      security:
+        - apikey: []
+      tags: [Models]
+      summary: update model
+      description: update model
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the model to get.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name:
+                type: string
+              name_model:
+                type: string
+              type:
+                type: string
+              model:
+                type: object
+              descriptions:
+                type: string
+              comments:
+                type: array
+            example:
+              name: seva
+              name_model: cube
+              type: 3d
+              model: { data: "12431814828142441" }
+              description: good cube
+              comments: ["good 3d model"]
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: update model
+    delete:
+      security:
+        - apikey: []
+      tags: [Models]
+      summary: delete model
+      description: delete model
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Numeric ID of the model to get.

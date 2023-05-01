@@ -7,45 +7,13 @@ import handlersv3 from "./api/v3/handlers.js";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware, errorsValidations,
-    myHelmet, myMorgan
+    myHelmet, myMorgan, swaggerDocs
 } from "../../middlewares/middleware.js";
-import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUI from "swagger-ui-express"
 import Config from "../../../config/config.js";
 
 const config = new Config().getServer()
 const app = express()
-
-const swaggerOptions = {
-    definition: {
-        openapi: "3.0.0",
-        info:{
-            title: "Documentations",
-            version: "1.0.0",
-            contact: {
-                name: "vpbuyanov",
-                url: "https://t.me/vpbuyanov",
-                email: "mors@nemors.ru",
-            },
-        },
-        servers: [
-            {
-               url: `${config.hosting}/api/v3`
-            },
-            {
-                url: `${config.hosting}/api/v2`
-            },
-            {
-                url: `${config.hosting}/api/v1`
-            },
-        ],
-        host: `${config.hosting}`,
-    },
-    apis: ['src/server/http/api/v3/documentations.yaml']
-}
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions)
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(myHelmet)
 app.use(myMorgan)
@@ -73,6 +41,8 @@ app.use(
     AuthorizationMiddleware,
     handlersv3
 )
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(BadUrlMiddleware)
 
