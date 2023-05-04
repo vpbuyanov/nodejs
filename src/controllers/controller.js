@@ -122,7 +122,7 @@ export async function deleteAccount(req, res, next) {
 
 export async function getAllModels(req, res, next) {
     try {
-        if (await FindToId("models", {}, {name: 1})){
+        if (await FindToId("models", {}, {name_model: 1})){
             res.send(await FindToId("models", {}, {name_model: 1}))
         }else{
             res.status(400).send("no model in database")

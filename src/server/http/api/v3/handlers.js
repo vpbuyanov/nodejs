@@ -14,7 +14,6 @@ import {
 
 const handlers = Router()
 
-
 handlers.get('/', getMainText)
 handlers.get('/comments', getComment)
 handlers.get('/comments/:id', getMyComment)
