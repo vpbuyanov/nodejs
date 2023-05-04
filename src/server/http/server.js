@@ -30,13 +30,13 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `${config.hosting}/api/v3`
+                url: `/api/v3`
             },
             {
-                url: `${config.hosting}/api/v2`
+                url: `/api/v2`
             },
             {
-                url: `${config.hosting}/api/v1`
+                url: `/api/v1`
             },
         ],
         tags:[
@@ -64,7 +64,6 @@ const swaggerOptions = {
 }
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(myHelmet)
 app.use(myMorgan)
@@ -92,9 +91,9 @@ app.use(
     AuthorizationMiddleware,
     handlersv3
 )
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(BadUrlMiddleware)
-
 app.use(errorsValidations)
 
 app.listen(config.port, config.host, () => {

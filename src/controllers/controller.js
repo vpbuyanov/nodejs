@@ -75,9 +75,13 @@ export async function getMyComment(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await FindToId("comments", {}, {}, false, req.params.id))
+            if (await FindToId("comments", {}, {}, false, req.params.id)) {
+                res.send(await FindToId("comments", {}, {}, false, req.params.id))
+            }else{
+                res.status(400).send("no valid data")
+            }
         }else{
-            res.status(400).send("no valid id")
+            res.status(406).send("no valid id")
         }
     }catch (err) {
         next(err)
@@ -149,7 +153,8 @@ export async function getMyModel(req, res, next) {
 export async function createModels(req, res, next) {
     try {
         const data = req.body
-        if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
+        console.log(data)
+        if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
             await Create("models", data)
             res.send("creating models")
         }else{
@@ -173,7 +178,7 @@ export async function updateModel(req, res, next) {
         const data = req.body
         const id = req.params.id
         if (ObjectId.isValid(id)){
-            if (data.name && data.name_model && data.type && data.model && data.description && data.comments){
+            if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
                 await Update('models', id, data)
                 res.send("update model")
             }else{
@@ -188,7 +193,7 @@ export async function updateModel(req, res, next) {
                     "}")
             }
         }else{
-            res.status(400).send("no valid id")
+            res.status(406).send("no valid id")
         }
     }catch (err) {
         next(err)
@@ -206,7 +211,7 @@ export async function deleteModel(req, res, next) {
                 res.status(400).send("no find model")
             }
         }else{
-            res.status(400).send("no valid id")
+            res.status(406).send("no valid id")
         }
     }catch (err) {
         next(err)

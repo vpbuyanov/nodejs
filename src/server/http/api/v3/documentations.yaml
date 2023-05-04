@@ -13,9 +13,11 @@ paths:
       description: send plain text "Hello"
       produces:
         - text/plain
-      responses:
-        200:
-          description: send "Hello" and status code 200
+    responses:
+      200:
+        description: send hello
+      500:
+        description: servers error
 
   /login:
     post:
@@ -36,6 +38,8 @@ paths:
       responses:
         200:
           description: sends your apikey
+        500:
+          description: servers error
 
   /account/delete:
     delete:
@@ -49,6 +53,8 @@ paths:
       responses:
         200:
           description: deleted your apikey
+        500:
+          description: servers error
 
   /comments:
     get:
@@ -60,6 +66,8 @@ paths:
       responses:
         200:
           description: sends an array of comment objects
+        500:
+          description: servers error
     post:
       security:
         - apikey: []
@@ -83,6 +91,12 @@ paths:
       responses:
         200:
           description: sends text "comment create"
+        400:
+          description: no valid data
+        403:
+          description: no api key
+        500:
+          description: servers error
 
   /comments/{id}:
     get:
@@ -98,47 +112,10 @@ paths:
       responses:
         200:
           description: sends json comment
-    put:
-      security:
-        - apikey: []
-      tags: [Comments]
-      summary: update one comment
-      description: return text
-      parameters:
-        - in: path
-          name: id
-          type: string
-          required: true
-          description: Numeric ID of the comment to get.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              name:
-                type: string
-              text:
-                type: string
-            example:
-              name: seva
-              text: good comment
-      produces:
-        - text/plain
-      responses:
-        200:
-          description: sends text "update comment"
-    delete:
-      security:
-        - apikey: []
-      tags: [Comments]
-      summary: delete one comment
-      description: return text
-      parameters:
-        - in: path
-          name: id
-          type: string
-          required: true
-          description: Numeric ID of the comment to get.
+        406:
+          description: no valid id
+        500:
+          description: servers error
 
   /models:
     get:
@@ -162,6 +139,8 @@ paths:
               example:   # Sample object
                 _id: 10
                 name_model: Triangle
+        500:
+          description: servers error
     post:
       security:
         - apikey: []
@@ -196,7 +175,13 @@ paths:
         - text/plain
       responses:
         200:
-          description: sends text "model create"
+          description: send text "model create"
+        400:
+          description: no valid data
+        403:
+          description: no api key
+        500:
+          description: servers error
 
   /models/{id}:
     get:
@@ -245,6 +230,10 @@ paths:
                 comments: good triangle
                 time_create: 2023-04-27T10:09:21.597Z
                 last_update: 2023-04-27T10:09:21.597Z
+        406:
+          description: no valid id
+        500:
+          description: servers error
     put:
       security:
         - apikey: []
@@ -286,6 +275,14 @@ paths:
       responses:
         200:
           description: update model
+        400:
+          description: no valid data
+        403:
+          description: no api key
+        406:
+          description: no valid id
+        500:
+          description: servers error
     delete:
       security:
         - apikey: []
@@ -298,3 +295,14 @@ paths:
           type: string
           required: true
           description: Numeric ID of the model to get.
+      responses:
+        200:
+          description: delete model
+        400:
+          description: no model in databases
+        403:
+          description: no api key
+        406:
+          description: no valid id
+        500:
+          description: servers error
