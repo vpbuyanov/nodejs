@@ -1,16 +1,17 @@
-import express from "express";
 import path from "path";
+import helmet from "helmet";
+import morgan from "morgan";
+import express from "express";
 import bodyParser from "body-parser";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 import handlersv1 from "./api/v1/handlers.js";
 import handlersv2 from "./api/v2/handlers.js";
 import handlersv3 from "./api/v3/handlers.js";
 import {
     AuthorizationMiddleware,
-    BadUrlMiddleware, errorsValidations,
-    myHelmet, myMorgan
+    BadUrlMiddleware, errorsValidations
 } from "../../middlewares/middleware.js";
-import swaggerJsDoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express"
 import Config from "../../../config/config.js";
 
 const config = new Config().getServer()
@@ -65,8 +66,8 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
-app.use(myHelmet)
-app.use(myMorgan)
+app.use(helmet())
+app.use(morgan(config.morgan))
 
 const __dirname = path.resolve()
 

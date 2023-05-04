@@ -1,9 +1,4 @@
-import helmet from "helmet";
-import morgan from "morgan"
 import {GetApiKeys} from "../services/service.js";
-import Config from "../../config/config.js";
-
-const config = new Config().getServer()
 
 export async function AuthorizationMiddleware(req, res, next) {
     try {
@@ -46,6 +41,3 @@ export function errorsValidations(err, req, res, next) {
 export function BadUrlMiddleware(req, res) {
     res.status(404).send("No such url address")
 }
-
-export const myHelmet = helmet()
-export const myMorgan = morgan(config.morgan)
