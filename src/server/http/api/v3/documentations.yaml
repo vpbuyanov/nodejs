@@ -13,11 +13,11 @@ paths:
       description: send plain text "Hello"
       produces:
         - text/plain
-    responses:
-      200:
-        description: send hello
-      500:
-        description: servers error
+      responses:
+        200:
+          description: send hello
+        500:
+          description: servers error
 
   /login:
     post:
@@ -53,6 +53,8 @@ paths:
       responses:
         200:
           description: deleted your apikey
+        403:
+          description: no api key
         500:
           description: servers error
 
@@ -230,6 +232,8 @@ paths:
                 comments: good triangle
                 time_create: 2023-04-27T10:09:21.597Z
                 last_update: 2023-04-27T10:09:21.597Z
+        400:
+          description: no valid data
         406:
           description: no valid id
         500:
