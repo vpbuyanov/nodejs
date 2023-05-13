@@ -1,8 +1,11 @@
-import {GetApiKeys} from "../services/service.js";
+import Users from "../services/users.js";
+import {session} from "../services/session.js";
+
+let users = new Users()
 
 export async function AuthorizationMiddleware(req, res, next) {
     try {
-        const keys = await GetApiKeys()
+        const keys = await users.getUserKeys(session)
         if (keys.status){
             next(keys.status)
         }

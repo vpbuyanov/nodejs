@@ -1,14 +1,13 @@
-import {
-    Create,
-    Update,
-    Delete,
-    DeleteApiKey,
-    FindToId
-} from "../services/service.js";
 import {ObjectId} from 'mongodb'
-import e from "express";
+import Models from "../services/models.js";
+import Comments from "../services/comments.js";
+import Users from "../services/users.js";
+import {session} from "../services/session.js";
 
-let users = {}
+let models = new Models()
+let comment = new Comments()
+let users = new Users()
+
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -18,37 +17,11 @@ export function getMainText(req, res){
     res.send('Hello')
 }
 
-export function getAllStats(req, res) {
-    const name = req.headers['user-agent']
-    let firstHtml =
-        '<table>' +
-            '<tr>' +
-                '<td>Name</td>' +
-                '<td>Count request</td>' +
-            '</tr>'
-    let secondHtml = ''
-
-    if (users[name]) {
-        users[name] += 1
-    }else{
-        users[name] = 1
-    }
-    for (const key in users) {
-        secondHtml +=
-            `<tr>
-                <td>${key}</td>
-                <td>${users[key]}</td>
-            </tr>`
-    }
-    let resHtml = firstHtml + secondHtml + '</table>'
-    res.send(resHtml)
-}
-
 export async function createComment(req, res, next) {
     try {
         const data = req.body
         if (data.name && data.text){
-            await Create("comments", data)
+            await comment.createComment(session, data)
             res.send("comments create")
         }else{
             res.status(400).send("not data valid. Please send json {'name': 'yourName', 'text': 'textYourComment'}")
@@ -58,10 +31,10 @@ export async function createComment(req, res, next) {
     }
 }
 
-export async function getComment(req, res, next) {
+export async function getComments(req, res, next) {
     try {
-        if (await FindToId("comments")){
-            res.send(await FindToId("comments"))
+        if (await comment.getAllComments(session)){
+            res.send(await comment.getAllComments(session))
         }else{
             res.status(400).send("no comment in database")
         }
@@ -75,8 +48,8 @@ export async function getMyComment(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            if (await FindToId("comments", {}, {}, false, req.params.id)) {
-                res.send(await FindToId("comments", {}, {}, false, req.params.id))
+            if (await comment.getCommentByID(session, id)) {
+                res.send(await comment.getCommentByID(session, id))
             }else{
                 res.status(400).send("no valid data")
             }
@@ -99,8 +72,7 @@ export async function login(req, res, next) {
                 "name": name,
                 "api_key": api_key
             }
-
-            await Create('users', data)
+            await users.createUser(session, data)
             res.send(`you are successfully registered, your api_key: ${api_key}`)
         }else{
             res.status(400).send("no sender name")
@@ -113,7 +85,7 @@ export async function login(req, res, next) {
 export async function deleteAccount(req, res, next) {
     try {
         const apikey = req.headers['apikey']
-        if (await DeleteApiKey(apikey)){
+        if (await users.deleteUserKey(session, apikey)){
             res.send('delete api-key')
         }else{
             res.status(400).send('not found api in database')
@@ -124,38 +96,12 @@ export async function deleteAccount(req, res, next) {
 
 }
 
-export async function getAllModels(req, res, next) {
-    try {
-        if (await FindToId("models", {}, {name_model: 1})){
-            res.send(await FindToId("models", {}, {name_model: 1}))
-        }else{
-            res.status(400).send("no model in database")
-        }
-    }catch (err) {
-        next(err)
-    }
-}
-
-export async function getMyModel(req, res, next) {
-    try {
-        const id = req.params.id
-
-        if(ObjectId.isValid(id)){
-            res.send(await FindToId("models", {}, {}, false, req.params.id))
-        }else{
-            res.status(400).send("no valid id")
-        }
-    }catch (err) {
-        next(err)
-    }
-}
-
 export async function createModels(req, res, next) {
     try {
         const data = req.body
         console.log(data)
         if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
-            await Create("models", data)
+            await models.createModel(session, data)
             res.send("creating models")
         }else{
             res.status(400).send("no valid data.\n" +
@@ -173,13 +119,39 @@ export async function createModels(req, res, next) {
     }
 }
 
+export async function getAllModels(req, res, next) {
+    try {
+        if (await models.getAllModels(session)){
+            res.send(await models.getAllModels(session))
+        }else{
+            res.status(400).send("no model in database")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async function getMyModel(req, res, next) {
+    try {
+        const id = req.params.id
+
+        if(ObjectId.isValid(id)){
+            res.send(await models.getModelByID(session, id))
+        }else{
+            res.status(400).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
 export async function updateModel(req, res, next) {
     try {
         const data = req.body
         const id = req.params.id
         if (ObjectId.isValid(id)){
             if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
-                await Update('models', id, data)
+                await models.updateAllModelByID(session, id, data)
                 res.send("update model")
             }else{
                 res.status(400).send("no valid data.\n" +
@@ -205,7 +177,7 @@ export async function deleteModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            if (await Delete('models', req.params.id)){
+            if (await models.deleteModelByID(session, req.params.id)){
                 res.send("delete model")
             }else {
                 res.status(400).send("no find model")

@@ -9,13 +9,16 @@ import {
     getMyModel,
     updateModel,
     deleteModel,
-    createModels, createComment, getComment, getMyComment
+    createModels,
+    createComment,
+    getComments,
+    getMyComment
 } from '../../../../controllers/controller.js'
 
 const handlers = Router()
 
 handlers.get('/', getMainText)
-handlers.get('/comments', getComment)
+handlers.get('/comments', getComments)
 handlers.get('/comments/:id', getMyComment)
 handlers.get('/models', getAllModels)
 handlers.get('/models/:id', getMyModel)
