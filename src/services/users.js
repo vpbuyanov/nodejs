@@ -1,4 +1,4 @@
-class ApiKeys {
+class Users {
     async createUser(session, user){
         return await session.collection("users").insertOne(user)
     }
@@ -25,4 +25,4 @@ class ApiKeys {
 
 }
 
-export default ApiKeys
+export default Users
