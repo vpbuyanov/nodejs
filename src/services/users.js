@@ -1,6 +1,21 @@
 class Users {
-    async createUser(session, user){
-        return await session.collection("users").insertOne(user)
+    async createUser(session, user) {
+        const foundUser = await this.getUserKey(session, user.name);
+
+        let returnRes = null;
+
+        if (!foundUser) {
+            const insertedUser = await session.collection("users").insertOne(user);
+
+            if (insertedUser) {
+                returnRes = await this.getUserKey(user.name);
+            }
+        }
+        else {
+            returnRes = foundUser.api_key;
+        }
+
+        return returnRes;
     }
 
     async getUserKeys(session) {
@@ -23,6 +38,9 @@ class Users {
         }
     }
 
+    async getUserKey(session, userName) {
+        return await session.collection("users").findOne({name: userName})
+    }
 }
 
 export default Users
