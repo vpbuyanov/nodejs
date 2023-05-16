@@ -73,12 +73,11 @@ export async function login(req, res, next) {
                 "api_key": api_key
             }
             const response = await users.createUser(session, data)
-            // console.log(response)
 
             if (response) {
                 res.json({
-                    name,
-                    api_key
+                    name: response.name,
+                    apiKey: response.api_key
                 });
             }
         }else{

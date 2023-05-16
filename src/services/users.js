@@ -8,11 +8,11 @@ class Users {
             const insertedUser = await session.collection("users").insertOne(user);
 
             if (insertedUser) {
-                returnRes = await this.getUserKey(user.name);
+                returnRes = await this.getUserKey(session, user.name);
             }
         }
         else {
-            returnRes = foundUser.api_key;
+            returnRes = foundUser;
         }
 
         return returnRes;
