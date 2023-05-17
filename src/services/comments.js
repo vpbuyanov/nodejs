@@ -5,6 +5,10 @@ class Comments {
         return await session.collection("comments").insertOne(comment)
     }
 
+    async getCommentByModelID(session, modelID){
+        return await session.collection("comments").find( { modelID: modelID } ).project({_id: 0, name: 1, text: 1}).toArray()
+    }
+
     async getCommentByID(session, id){
         return await session.collection("comments").findOne({_id: new ObjectId(id)})
     }

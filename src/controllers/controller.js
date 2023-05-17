@@ -20,11 +20,11 @@ export function getMainText(req, res){
 export async function createComment(req, res, next) {
     try {
         const data = req.body
-        if (data.name && data.text){
+        if (data.name && data.text && data.modelID){
             await comment.createComment(session, data)
             res.send("comments create")
         }else{
-            res.status(400).send("not data valid. Please send json {'name': 'yourName', 'text': 'textYourComment'}")
+            res.status(400).send("not data valid. Please send json {'name': 'yourName', 'text': 'textYourComment', 'modelID': 'yourModelID'}")
         }
     }catch (err) {
         next(err)
@@ -55,6 +55,19 @@ export async function getMyComment(req, res, next) {
             }
         }else{
             res.status(406).send("no valid id")
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+export async  function getModelsComments(req, res, next) {
+    try {
+        const modelID = req.params.id
+        if(ObjectId.isValid(modelID)){
+            res.send(await comment.getCommentByModelID(session, modelID))
+        }else{
+            res.status(400).send("no valid id")
         }
     }catch (err) {
         next(err)
@@ -142,7 +155,9 @@ export async function getMyModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            res.send(await models.getModelByID(session, id))
+            const result = await models.getModelByID(session, id)
+            result.comments = await comment.getCommentByModelID(session, id)
+            res.send(result)
         }else{
             res.status(400).send("no valid id")
         }
