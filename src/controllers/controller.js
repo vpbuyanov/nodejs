@@ -61,19 +61,6 @@ export async function getMyComment(req, res, next) {
     }
 }
 
-export async  function getModelsComments(req, res, next) {
-    try {
-        const modelID = req.params.id
-        if(ObjectId.isValid(modelID)){
-            res.send(await comment.getCommentByModelID(session, modelID))
-        }else{
-            res.status(400).send("no valid id")
-        }
-    }catch (err) {
-        next(err)
-    }
-}
-
 export async function login(req, res, next) {
     try {
         const { name } = req.body
@@ -118,8 +105,7 @@ export async function deleteAccount(req, res, next) {
 export async function createModels(req, res, next) {
     try {
         const data = req.body
-        console.log(data)
-        if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
+        if (data.name && data.name_model && data.type && data.model && data.description){
             await models.createModel(session, data)
             res.send("creating models")
         }else{

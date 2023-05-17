@@ -6,7 +6,7 @@ class Comments {
     }
 
     async getCommentByModelID(session, modelID){
-        return await session.collection("comments").find( { modelID: modelID } ).project({_id: 0, name: 1, text: 1}).toArray()
+        return await session.collection("comments").find( { modelID: modelID } ).project({_id: 0, text: 1}).toArray()
     }
 
     async getCommentByID(session, id){
