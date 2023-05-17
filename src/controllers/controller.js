@@ -72,8 +72,14 @@ export async function login(req, res, next) {
                 "name": name,
                 "api_key": api_key
             }
-            await users.createUser(session, data)
-            res.send(`you are successfully registered, your api_key: ${api_key}`)
+            const response = await users.createUser(session, data)
+
+            if (response) {
+                res.json({
+                    name: response.name,
+                    apiKey: response.api_key
+                });
+            }
         }else{
             res.status(400).send("no sender name")
         }
