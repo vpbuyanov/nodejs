@@ -8,7 +8,6 @@ import swaggerUI from "swagger-ui-express";
 import handlersv1 from "./api/v1/handlers.js";
 import handlersv2 from "./api/v2/handlers.js";
 import handlersv3 from "./api/v3/handlers.js";
-import cors from "cors";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware, errorsValidations
