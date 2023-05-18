@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {getMainText} from '../../../../controllers/controller.js'
+import {getMainText} from '../../../../controllers/mainControllers.js'
 
 
 const handlers = Router()

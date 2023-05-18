@@ -2,7 +2,7 @@ import {Router} from "express";
 import {
     createComment,
     getMainText, getMyComment,
-} from '../../../../controllers/controller.js'
+} from '../../../../controllers/mainControllers.js'
 
 const handlers = Router()
 
