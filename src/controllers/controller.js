@@ -105,8 +105,7 @@ export async function deleteAccount(req, res, next) {
 export async function createModels(req, res, next) {
     try {
         const data = req.body
-        console.log(data)
-        if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
+        if (data.name && data.name_model && data.type && data.model && data.description){
             await models.createModel(session, data)
             res.send("creating models")
         }else{

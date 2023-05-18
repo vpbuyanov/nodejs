@@ -8,6 +8,7 @@ import swaggerUI from "swagger-ui-express";
 import handlersv1 from "./api/v1/handlers.js";
 import handlersv2 from "./api/v2/handlers.js";
 import handlersv3 from "./api/v3/handlers.js";
+import cors from "cors";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware, errorsValidations
@@ -71,15 +72,23 @@ app.use(morgan(config.morgan))
 
 const __dirname = path.resolve()
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, apikey");
+
+    // Todo вынести в отдельный Middleware
+    if (req.method === "OPTIONS") {
+        res.status(200).send();
+    }
+    else {
+        next();
+    }
+})
+
 app.use(bodyParser.json());
 
 app.use(express.static(path.resolve(__dirname, 'public')))
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-})
 
 app.use(
     "/api/v1",
