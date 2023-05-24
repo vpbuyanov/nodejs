@@ -1,8 +1,8 @@
 import {Router} from "express";
-import { getMainText } from '../../../controllers/mainControllers.js'
-import UsersController from "../../../controllers/users.js";
-import ModelsControllers from "../../../controllers/models.js";
-import CommentsControllers from "../../../controllers/comments.js";
+import { getMainText } from '../../controllers/mainControllers.js'
+import UsersController from "../../controllers/users.js";
+import ModelsControllers from "../../controllers/models.js";
+import CommentsControllers from "../../controllers/comments.js";
 
 const handlers = Router()
 const user = new UsersController()

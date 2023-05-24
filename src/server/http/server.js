@@ -5,9 +5,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import handlersv1 from "./api/v1/handlers.js";
-import handlersv2 from "./api/v2/handlers.js";
-import handlersv3 from "./api/v3/handlers.js";
+import handlers from "./handlers.js";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware,
@@ -32,12 +30,6 @@ const swaggerOptions = {
             },
         },
         servers: [
-            {
-                url: `/api/v3`
-            },
-            {
-                url: `/api/v2`
-            },
             {
                 url: `/api/v1`
             },
@@ -80,27 +72,15 @@ app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
-    "/api/v1",
-    AuthorizationMiddleware,
-    handlersv1
-)
-
-app.use(
-    "/api/v2",
-    AuthorizationMiddleware,
-    handlersv2
-)
-
-app.use(
     "/api/v3",
     AuthorizationMiddleware,
-    handlersv3
+    handlers
 )
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(BadUrlMiddleware)
 app.use(errorsValidations)
 
-app.listen(config.port, config.host, () => {
+app.listen(config.port, () => {
     console.log(`Listening ${config.hosting}`);
 });

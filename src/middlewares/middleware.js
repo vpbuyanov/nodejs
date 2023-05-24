@@ -28,7 +28,6 @@ export function originHeaderMiddleware(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, apikey");
 
-    // Todo вынести в отдельный Middleware
     if (req.method === "OPTIONS") {
         res.status(200).send();
     }

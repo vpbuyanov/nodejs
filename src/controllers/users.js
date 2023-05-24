@@ -4,17 +4,15 @@ import Users from "../services/users.js";
 let users = new Users()
 
 class UsersController {
-    #dataTimeCreate() {
-        return Date.now();
-    }
-
     async login(req, res, next) {
         try {
             const { name } = req.body
 
             if (name){
-                const timeCreate = this.#dataTimeCreate()
+                const timeCreate = Date.now();
+                console.log(timeCreate)
                 const api_key = name + timeCreate
+                console.log(api_key)
                 const data = {
                     "name": name,
                     "api_key": api_key
