@@ -1,0 +1,20 @@
+version: '3'
+services:
+  node:
+    restart: always
+    build: .
+    ports:
+      - "5050:5050"
+    environment:
+      - SERVER_PORT=5050
+      - SERVER_MORGAN=dev
+      - MONGODB_URL=mongo:27017/web
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+volumes:
+  mongodb:
