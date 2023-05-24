@@ -6,7 +6,7 @@ services:
     restart: always
     build: .
     ports:
-      - "5050:5050"
+      - "8000:5050"
     environment:
       - SERVER_PORT=5050
       - SERVER_MORGAN=tiny
