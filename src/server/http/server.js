@@ -31,7 +31,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `/api/v1`
+                url: `/api`
             },
         ],
         tags:[
@@ -72,7 +72,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
-    "/api/v3",
+    "/api",
     AuthorizationMiddleware,
     handlers
 )

@@ -9,7 +9,6 @@ const user = new UsersController()
 const modal = new ModelsControllers()
 const comment = new CommentsControllers()
 
-handlers.get('/', getMainText)
 handlers.get('/comments', comment.getComments)
 handlers.get('/comments/:id', comment.getMyComment)
 handlers.get('/models', modal.getAllModels)
