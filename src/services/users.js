@@ -18,12 +18,10 @@ class Users {
         return returnRes;
     }
 
-    async getUserKeys(session) {
-        const keys = []
-        let objectKeys = await session.collection("users").find().toArray()
-        objectKeys.forEach(element => keys.push(element.api_key))
-        if (keys){
-            return keys
+    async findKey(session, key) {
+        const findKey = await session.collection("users").findOne({apikey: key})
+        if (findKey){
+            return findKey
         }else{
             return null
         }

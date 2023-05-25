@@ -5,12 +5,10 @@ let users = new Users()
 
 export async function AuthorizationMiddleware(req, res, next) {
     try {
-        const keys = await users.getUserKeys(session)
-        if (keys.status){
-            next(keys.status)
-        }
-        if (keys) {
-            if (!keys.includes(req.headers["apikey"]) && req.method !== "GET" && req.url !== "/login") {
+        const findKey = await users.findKey(session, req.headers["apikey"])
+
+        if (findKey) {
+            if (req.method !== "GET" && req.url !== "/login") {
                 return res.status(403).send('access denied')
             }else{
                 next()
