@@ -5,7 +5,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import handlers from "./handlers.js";
+import handlers from "../../routes/handlers.js";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware,
@@ -55,7 +55,7 @@ const swaggerOptions = {
         host: `${config.hosting}`,
 
     },
-    apis: ['src/server/http/api/v3/documentations.yaml']
+    apis: ['docs/documentations.yaml']
 }
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
