@@ -9,9 +9,7 @@ class UsersController {
             const { name } = req.body
 
             if (name){
-                const timeCreate = Date.now();
-                console.log(timeCreate)
-                const api_key = name + timeCreate
+                const api_key = name + Date.now()
                 console.log(api_key)
                 const data = {
                     "name": name,
@@ -37,7 +35,7 @@ class UsersController {
         try {
             const apikey = req.headers['apikey']
             if (await users.deleteUserKey(session, apikey)){
-                res.send('delete api-key')
+                res.send('delete apikey')
             }else{
                 res.status(400).send('not found api in database')
             }
