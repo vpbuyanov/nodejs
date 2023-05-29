@@ -9,17 +9,17 @@ class UsersController {
             const { name } = req.body
 
             if (name){
-                const api_key = name + Date.now()
+                const apikey = name + Date.now()
                 const data = {
                     "name": name,
-                    "api_key": api_key
+                    "apikey": apikey
                 }
                 const response = await users.createUser(session, data)
 
                 if (response) {
                     res.json({
                         name: response.name,
-                        apiKey: response.api_key
+                        apiKey: response.apikey
                     });
                 }
             }else{
