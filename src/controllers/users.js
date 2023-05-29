@@ -10,7 +10,6 @@ class UsersController {
 
             if (name){
                 const api_key = name + Date.now()
-                console.log(api_key)
                 const data = {
                     "name": name,
                     "api_key": api_key

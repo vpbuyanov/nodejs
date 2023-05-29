@@ -7,14 +7,10 @@ export async function AuthorizationMiddleware(req, res, next) {
     try {
         const findKey = await users.findKey(session, req.headers["apikey"])
 
-        if (findKey) {
-            if (req.method !== "GET" && req.url !== "/login") {
-                return res.status(403).send('access denied')
-            }else{
-                next()
-            }
+        if (findKey == null && req.method !== "GET" && req.url !== "/login") {
+            return res.status(403).send('access denied')
         }else{
-            res.send('not apikey in databases')
+            next()
         }
     }catch (err) {
         next(err)

@@ -1,8 +1,10 @@
 import Models from "../services/models.js";
 import {session} from "../services/session.js";
 import {ObjectId} from "mongodb";
+import Comments from "../services/comments.js";
 
 let models = new Models()
+let comments = new Comments()
 
 
 class ModelsControllers {
@@ -46,7 +48,7 @@ class ModelsControllers {
 
             if(ObjectId.isValid(id)){
                 const result = await models.getModelByID(session, id)
-                result.comments = await comment.getCommentByModelID(session, id)
+                result.comments = await comments.getCommentByModelID(session, id)
                 res.send(result)
             }else{
                 res.status(400).send("no valid id")
@@ -58,11 +60,11 @@ class ModelsControllers {
 
     async updateModel(req, res, next) {
         try {
-            const data = req.body
+            const model = req.body
             const id = req.params.id
             if (ObjectId.isValid(id)){
-                if (data.name && data.name_model && data.type && data.model && data.descriptions && data.comments){
-                    await models.updateAllModelByID(session, id, data)
+                if (model.name_model || model.type || model.model || model.descriptions || model.comments){
+                    await models.updateAllModelByID(session, id, model)
                     res.send("update model")
                 }else{
                     res.status(400).send("no valid data.\n" +

@@ -17,7 +17,7 @@ handlers.post('/comments', comment.createComment)
 handlers.post('/models', modal.createModels)
 handlers.post('/login', user.login)
 
-handlers.put('/models/:id', modal.updateModel)
+handlers.patch('/models/:id', modal.updateModel)
 
 handlers.delete('/models/:id', modal.deleteModel)
 handlers.delete('/account/delete', user.deleteAccount)
