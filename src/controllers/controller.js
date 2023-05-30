@@ -3,6 +3,7 @@ import Models from "../services/models.js";
 import Comments from "../services/comments.js";
 import Users from "../services/users.js";
 import {session} from "../services/session.js";
+import { v4 as uuidv4 } from 'uuid';
 
 let models = new Models()
 let comment = new Comments()
@@ -66,31 +67,29 @@ export async function login(req, res, next) {
         const { name } = req.body
 
         if (name){
-            const number = getRandomInt(1000)
-            const api_key = name + number
             const data = {
                 "name": name,
-                "api_key": api_key
+                "api_key": uuidv4(),
             }
             const response = await users.createUser(session, data)
 
             if (response) {
-                res.json({
-                    name: response.name,
-                    apiKey: response.api_key
+                res.status(response.status).json({
+                    name: response.info.name,
+                    apiKey: response.info.api_key
                 });
             }
         }else{
             res.status(400).send("no sender name")
         }
-    }catch (err) {
+    } catch (err) {
         next(err)
     }
 }
 
 export async function deleteAccount(req, res, next) {
     try {
-        const apikey = req.headers['apikey']
+        const apikey = req.headers['apikey'];
         if (await users.deleteUserKey(session, apikey)){
             res.send('delete api-key')
         }else{
@@ -104,11 +103,16 @@ export async function deleteAccount(req, res, next) {
 
 export async function createModels(req, res, next) {
     try {
-        const data = req.body
-        if (data.name && data.name_model && data.type && data.model && data.description){
-            await models.createModel(session, data)
-            res.send("creating models")
-        }else{
+        const data = req.body;
+
+        if (data.name && data.name_model && data.type && data.model && data.description) {
+            const createResponse = await models.createModel(session, data);
+
+            if (createResponse.insertedId) {
+                res.status(201).json(createResponse.insertedId);
+            }
+        }
+        else{
             res.status(400).send("no valid data.\n" +
                 "Example send json {\n" +
                 "\t\"name\": \"seva\",\n" +
@@ -184,10 +188,12 @@ export async function deleteModel(req, res, next) {
         const id = req.params.id
 
         if(ObjectId.isValid(id)){
-            if (await models.deleteModelByID(session, req.params.id)){
-                res.send("delete model")
+            const deleteResponse = await models.deleteModelByID(session, req.params.id);
+
+            if (deleteResponse.deletedCount === 1){
+                res.send(deleteResponse);
             }else {
-                res.status(400).send("no find model")
+                res.status(404).send("model not found")
             }
         }else{
             res.status(406).send("no valid id")

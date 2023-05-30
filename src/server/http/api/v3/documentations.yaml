@@ -37,9 +37,11 @@ paths:
         - text/plain
       responses:
         200:
-          description: sends your apikey
+          description: "sends your apikey"
+        201:
+          description: "Пользователь создан, сгенерирован API-ключ"
         500:
-          description: servers error
+          description: "Server error"
 
   /account/delete:
     delete:
@@ -176,8 +178,8 @@ paths:
       produces:
         - text/plain
       responses:
-        200:
-          description: send text "model create"
+        201:
+          description: "Возвращает ID созданной модели"
         400:
           description: no valid data
         403:
