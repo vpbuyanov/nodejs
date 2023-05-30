@@ -6,13 +6,12 @@ import fileUpload from "express-fileupload";
 
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-
-import handlersv1 from "./api/v1/handlers.js";
-import handlersv2 from "./api/v2/handlers.js";
-import handlersv3 from "./api/v3/handlers.js";
+import handlers from "../../routes/handlers.js";
 import {
     AuthorizationMiddleware,
-    BadUrlMiddleware, errorsValidations
+    BadUrlMiddleware,
+    errorsValidationsMiddleware,
+    originHeaderMiddleware
 } from "../../middlewares/middleware.js";
 import Config from "../../../config/config.js";
 
@@ -33,13 +32,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `/api/v3`
-            },
-            {
-                url: `/api/v2`
-            },
-            {
-                url: `/api/v1`
+                url: `/api`
             },
         ],
         tags:[
@@ -63,7 +56,7 @@ const swaggerOptions = {
         host: `${config.hosting}`,
 
     },
-    apis: ['src/server/http/api/v3/documentations.yaml']
+    apis: ['docs/documentations.yaml']
 }
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
@@ -77,45 +70,21 @@ app.use(express.json({
     type: "application/json",
 }));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, apikey");
-
-    // Todo вынести в отдельный Middleware
-    if (req.method === "OPTIONS") {
-        res.status(200).send();
-    }
-    else {
-        next();
-    }
-})
+app.use(originHeaderMiddleware)
 
 const __dirname = path.resolve()
 app.use(express.static(path.resolve(__dirname, 'public')))
 
-// app.use(
-//     "/api/v1",
-//     AuthorizationMiddleware,
-//     handlersv1
-// )
-//
-// app.use(
-//     "/api/v2",
-//     AuthorizationMiddleware,
-//     handlersv2
-// )
-
 app.use(
     "/api",
     AuthorizationMiddleware,
-    handlersv3
+    handlers
 )
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(BadUrlMiddleware)
-app.use(errorsValidations)
+app.use(errorsValidationsMiddleware)
 
-app.listen(config.port, config.host, () => {
+app.listen(config.port, () => {
     console.log(`Listening ${config.hosting}`);
 });

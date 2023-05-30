@@ -13,11 +13,8 @@ class Server{
 }
 
 class MongoDB{
-    constructor (host, port, db_name) {
-        this.host = host
-        this.port = port
-        this.name = db_name
-        this.url = `mongodb://${this.host}:${this.port}/${this.name}`
+    constructor (url) {
+        this.url = "mongodb://" + url
     }
 
     async ConnDB(){
@@ -34,20 +31,18 @@ class MongoDB{
 }
 
 export default class Config{
-    #serverHost     = process.env.SERVER_HOST   || '127.0.0.1'
+    #serverHost     = '127.0.0.1'
     #serverPort     = process.env.SERVER_PORT   || 8000
     #serverMorgan   = process.env.SERVER_MORGAN || 'dev'
 
-    #mongoHost      = process.env.MONGODB_HOST  || '127.0.0.1'
-    #mongoPort      = process.env.MONGODB_PORT  || 27017
-    #mongoName      = process.env.MONGODB_NAME  || 'local'
+    #mongoUrl       = "mongo:27017/web"
     #imgBBApiKey    = "ee61ab75f41533f7a6ea1392973f7bd1"
 
     getServer(){
         return new Server(this.#serverHost, this.#serverPort, this.#serverMorgan)
     }
     getMongo(){
-        return new MongoDB(this.#mongoHost, this.#mongoPort, this.#mongoName)
+        return new MongoDB(this.#mongoUrl)
     }
     getImgBBApiKey() {
         return this.#imgBBApiKey;
