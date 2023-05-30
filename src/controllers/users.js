@@ -1,5 +1,6 @@
 import {session} from "../services/session.js";
 import Users from "../services/users.js";
+import {v4 as uuidv4} from "uuid";
 
 let users = new Users()
 
@@ -9,23 +10,23 @@ class UsersController {
             const { name } = req.body
 
             if (name){
-                const apikey = name + Date.now()
                 const data = {
                     "name": name,
-                    "apikey": apikey
+                    "api_key": uuidv4(),
                 }
                 const response = await users.createUser(session, data)
 
                 if (response) {
-                    res.json({
-                        name: response.name,
-                        apiKey: response.apikey
+                    res.status(response.status).json({
+                        name: response.info.name,
+                        apiKey: response.info.api_key
                     });
                 }
-            }else{
+            }
+            else {
                 res.status(400).send("no sender name")
             }
-        }catch (err) {
+        } catch (err) {
             next(err)
         }
     }

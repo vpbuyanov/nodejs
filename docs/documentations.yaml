@@ -143,6 +143,8 @@ paths:
               example:   # Sample object
                 _id: 10
                 name_model: Triangle
+        404:
+          description: No models in database
         500:
           description: servers error
     post:
@@ -304,11 +306,11 @@ paths:
       responses:
         200:
           description: delete model
-        400:
-          description: no model in databases
         403:
           description: no api key
+        404:
+          description: model not find in database
         406:
           description: no valid id
         500:
-          description: servers error
+          description: server error

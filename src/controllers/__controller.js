@@ -4,7 +4,7 @@ import Comments from "../services/comments.js";
 import Users from "../services/users.js";
 import {session} from "../services/session.js";
 import { v4 as uuidv4 } from 'uuid';
- import imgbbUploader from "imgbb-uploader";
+import imgbbUploader from "imgbb-uploader";
 
 import Config from "./../../config/config.js";
 
@@ -102,7 +102,6 @@ export async function deleteAccount(req, res, next) {
 }
 
 export async function createModels(req, res, next) {
-    // Some promise of base64 data
     const bufferToBase64 = (buffer) => {
         return new Promise((resolve) => {
             const buff = new Buffer.from(buffer);
@@ -119,9 +118,6 @@ export async function createModels(req, res, next) {
             file = req.files.file;
         }
 
-        console.log("file", file);
-        console.log("body", data);
-
         if (data.name && data.name_model && data.type && data.model) {
             const modelImages = {
                 'full': null,
@@ -137,7 +133,7 @@ export async function createModels(req, res, next) {
             data.time_updated = date;
 
             if (file) {
-                console.log("есть файлы", file);
+                // удаляем у объекта, который грузится в БД
                 delete data.file;
 
                 const imgBB_ApiKey = config.getImgBBApiKey();
