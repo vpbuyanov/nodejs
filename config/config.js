@@ -35,7 +35,7 @@ export default class Config{
     #serverPort     = process.env.SERVER_PORT   || 8000
     #serverMorgan   = process.env.SERVER_MORGAN || 'dev'
 
-    #mongoUrl       = process.env.MONGODB_URL
+    #mongoUrl       = "mongo:27017/web"
 
     getServer(){
         return new Server(this.#serverHost, this.#serverPort, this.#serverMorgan)

@@ -10,7 +10,6 @@ services:
     environment:
       - SERVER_PORT=5050
       - SERVER_MORGAN=tiny
-      - MONGODB_URL=mongo:27017/web
 
   mongo:
     image: mongo

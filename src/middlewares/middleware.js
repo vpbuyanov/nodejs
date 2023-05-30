@@ -30,7 +30,7 @@ export function originHeaderMiddleware(req, res, next) {
     }
 }
 
-export function errorsValidations(err, req, res, next) {
+export function errorsValidationsMiddleware(err, req, res, next) {
     err.status = 500
     res.status(err.status).send(err.message)
 }

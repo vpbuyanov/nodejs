@@ -19,7 +19,7 @@ class Users {
     }
 
     async findKey(session, apikey) {
-        const findKey = await session.collection("users").findOne({api_key: apikey})
+        const findKey = await session.collection("users").findOne({apikey: apikey})
         if (findKey){
             return findKey
         }else{

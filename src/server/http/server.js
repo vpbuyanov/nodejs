@@ -9,7 +9,7 @@ import handlers from "../../routes/handlers.js";
 import {
     AuthorizationMiddleware,
     BadUrlMiddleware,
-    errorsValidations,
+    errorsValidationsMiddleware,
     originHeaderMiddleware
 } from "../../middlewares/middleware.js";
 import Config from "../../../config/config.js";
@@ -79,7 +79,7 @@ app.use(
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use(BadUrlMiddleware)
-app.use(errorsValidations)
+app.use(errorsValidationsMiddleware)
 
 app.listen(config.port, () => {
     console.log(`Listening ${config.hosting}`);
