@@ -35,7 +35,7 @@ export default class Config{
     #serverPort     = process.env.SERVER_PORT   || 8000
     #serverMorgan   = process.env.SERVER_MORGAN || 'dev'
 
-    #mongoUrl       = "mongo:27017/web"
+    #mongoUrl       = "mongo:27017/aga"
     #imgBBApiKey    = "ee61ab75f41533f7a6ea1392973f7bd1"
 
     getServer(){
