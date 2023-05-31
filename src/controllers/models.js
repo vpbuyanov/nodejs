@@ -11,17 +11,34 @@ let comments = new Comments()
 
 
 class ModelsControllers {
+    #exampleData;
+    constructor() {
+        this.createModels = this.createModels.bind(this)
+        this.updateModel = this.updateModel.bind(this)
+        this.#exampleData =
+            `no valid data. 
+        Example send json {
+            "name": "seva",
+            "name_model": "triangle",
+            "type": "cube",
+            "model": {},
+            "description": "hi",
+            "comments": []
+        }`;
+    }
+
+    bufferToBase64(buffer){
+        return new Promise((resolve) => {
+            const buff = new Buffer.from(buffer);
+
+            // https://nodejs.org/api/buffer.html#buftostringencoding-start-end
+            const base64string = buff.toString("base64");
+            resolve(base64string);
+        });
+    }
+
     async createModels(req, res, next) {
-        const bufferToBase64 = (buffer) => {
-            return new Promise((resolve) => {
-                const buff = new Buffer.from(buffer);
-
-                // https://nodejs.org/api/buffer.html#buftostringencoding-start-end
-                const base64string = buff.toString("base64");
-                resolve(base64string);
-            });
-        }
-
+        console.log(this)
         try {
             const data = req.body;
             let file = null;
@@ -49,7 +66,7 @@ class ModelsControllers {
                     delete data.file;
 
                     const imgBB_ApiKey = config.getImgBBApiKey();
-                    const imageBase64 = await bufferToBase64(file.data);
+                    const imageBase64 = await this.bufferToBase64(file.data);
 
                     const image = await imgbbUploader({
                         apiKey: imgBB_ApiKey,
@@ -81,15 +98,7 @@ class ModelsControllers {
                 }
             }
             else{
-                res.status(400).send("no valid data.\n" +
-                    "Example send json {\n" +
-                    "\t\"name\": \"seva\",\n" +
-                    "\t\"name_model\": \"triangle\",\n" +
-                    "\t\"type\": \"3d\",\n" +
-                    "\t\"model\": {},\n" +
-                    "\t\"description\": \"hi\",\n" +
-                    "\t\"comments\": []\n" +
-                    "}")
+                res.status(400).send(this.#exampleData)
             }
         }catch (err) {
             next(err)
@@ -130,18 +139,11 @@ class ModelsControllers {
             const id = req.params.id
             if (ObjectId.isValid(id)){
                 if (model.name_model || model.type || model.model || model.description || model.comments){
+                    model.time_updated = new Date()
                     await models.updateAllModelByID(session, id, model)
-                    res.send("update model")
+                    res.send(await models.getModelByID(session, id))
                 }else{
-                    res.status(400).send("no valid data.\n" +
-                        "Example send json {\n" +
-                        "\t\"name\": \"seva\",\n" +
-                        "\t\"name_model\": \"triangle\",\n" +
-                        "\t\"type\": \"3d\",\n" +
-                        "\t\"model\": {},\n" +
-                        "\t\"description\": \"hi\",\n" +
-                        "\t\"comments\": \"\" \n" +
-                        "}")
+                    res.status(400).send(this.#exampleData)
                 }
             }else{
                 res.status(406).send("no valid id")
