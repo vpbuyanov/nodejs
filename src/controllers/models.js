@@ -2,8 +2,6 @@ import Models from "../services/models.js";
 import {session} from "../services/session.js";
 import {ObjectId} from "mongodb";
 import Comments from "../services/comments.js";
-
-import { v4 as uuidv4 } from 'uuid';
 import imgbbUploader from "imgbb-uploader";
 import Config from "./../../config/config.js";
 

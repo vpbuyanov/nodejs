@@ -34,9 +34,9 @@ class Users {
     }
 
     async deleteUserKey(session, apikey){
-        let object = await session.collection("users").findOne({"api_key": apikey})
+        let object = await session.collection("users").findOne({"apikey": apikey})
         if (object){
-            return await session.collection("users").deleteOne({"api_key": apikey})
+            return await session.collection("users").deleteOne({"apikey": apikey})
         }else{
             return null
         }

@@ -12,14 +12,14 @@ class UsersController {
             if (name){
                 const data = {
                     "name": name,
-                    "api_key": uuidv4(),
+                    "apikey": uuidv4(),
                 }
                 const response = await users.createUser(session, data)
 
                 if (response) {
                     res.status(response.status).json({
                         name: response.info.name,
-                        apiKey: response.info.api_key
+                        apiKey: response.info.apikey
                     });
                 }
             }
@@ -43,7 +43,6 @@ class UsersController {
             next(err)
         }
     }
-
 }
 
 export default UsersController
