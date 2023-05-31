@@ -1,8 +1,9 @@
-import path from "path";
+import path from "node:path";
 import helmet from "helmet";
 import morgan from "morgan";
 import express from "express";
-import bodyParser from "body-parser";
+import fileUpload from "express-fileupload";
+
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import handlers from "../../routes/handlers.js";
@@ -60,15 +61,18 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
+app.use(fileUpload({}))
 app.use(helmet())
 app.use(morgan(config.morgan))
 
-const __dirname = path.resolve()
+app.use(express.json({
+    limit: "10mb",
+    type: "application/json",
+}));
 
 app.use(originHeaderMiddleware)
 
-app.use(bodyParser.json());
-
+const __dirname = path.resolve()
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(

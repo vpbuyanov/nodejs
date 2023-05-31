@@ -10,7 +10,7 @@ class Models {
     }
 
     async getAllModels(session){
-        return await session.collection("models").find().project({name_model: 1}).toArray()
+        return await session.collection("models").find().project({name_model: 1, images: 1}).toArray()
     }
 
     async updateAllModelByID(session, id, model){

@@ -37,9 +37,11 @@ paths:
         - text/plain
       responses:
         200:
-          description: sends your apikey
+          description: "sends your apikey"
+        201:
+          description: "Пользователь создан, сгенерирован API-ключ"
         500:
-          description: servers error
+          description: "Server error"
 
   /account/delete:
     delete:
@@ -141,6 +143,8 @@ paths:
               example:   # Sample object
                 _id: 10
                 name_model: Triangle
+        404:
+          description: No models in database
         500:
           description: servers error
     post:
@@ -176,8 +180,8 @@ paths:
       produces:
         - text/plain
       responses:
-        200:
-          description: send text "model create"
+        201:
+          description: "Возвращает ID созданной модели"
         400:
           description: no valid data
         403:
@@ -302,11 +306,11 @@ paths:
       responses:
         200:
           description: delete model
-        400:
-          description: no model in databases
         403:
           description: no api key
+        404:
+          description: model not find in database
         406:
           description: no valid id
         500:
-          description: servers error
+          description: server error

@@ -8,11 +8,17 @@ class Users {
             const insertedUser = await session.collection("users").insertOne(user);
 
             if (insertedUser) {
-                returnRes = await this.getUserKey(session, user.name);
+                returnRes = {
+                    info: await this.getUserKey(session, user.name),
+                    status: 201,
+                };
             }
         }
         else {
-            returnRes = foundUser;
+            returnRes = {
+                info: foundUser,
+                status: 200,
+            };
         }
 
         return returnRes;
@@ -37,7 +43,9 @@ class Users {
     }
 
     async getUserKey(session, userName) {
-        return await session.collection("users").findOne({name: userName})
+        return await session.collection("users").findOne({
+            name: userName
+        });
     }
 }
 

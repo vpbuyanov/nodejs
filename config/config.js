@@ -36,11 +36,15 @@ export default class Config{
     #serverMorgan   = process.env.SERVER_MORGAN || 'dev'
 
     #mongoUrl       = "mongo:27017/web"
+    #imgBBApiKey    = "ee61ab75f41533f7a6ea1392973f7bd1"
 
     getServer(){
         return new Server(this.#serverHost, this.#serverPort, this.#serverMorgan)
     }
     getMongo(){
         return new MongoDB(this.#mongoUrl)
+    }
+    getImgBBApiKey() {
+        return this.#imgBBApiKey;
     }
 }
