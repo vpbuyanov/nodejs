@@ -1,4 +1,3 @@
-import path from "node:path";
 import helmet from "helmet";
 import morgan from "morgan";
 import express from "express";
@@ -71,9 +70,6 @@ app.use(express.json({
 }));
 
 app.use(originHeaderMiddleware)
-
-const __dirname = path.resolve()
-app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(
     "/api",
